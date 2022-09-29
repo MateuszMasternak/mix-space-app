@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from django import forms
+from .models import User, Set
 
 
 class SignUpForm(UserCreationForm):
@@ -51,4 +51,55 @@ class SignUpForm(UserCreationForm):
 class LogInForm(forms.Form):
     login = forms.CharField(max_length=320, required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
+
+
+class UserAvatarForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('avatar',)
     
+        def clean_avatar(self):
+            avatar = self.cleaned_data['avatar']
+
+            try:
+                w, h = get_image_dimensions(avatar)
+
+                max_width = max_height = 100
+                if w > max_width or h > max_height:
+                    raise forms.ValidationError(
+                        u'Please use an image that is '
+                        '%s x %s pixels or smaller.' % (max_width, max_height))
+
+                main, sub = avatar.content_type.split('/')
+                if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'png']):
+                    raise forms.ValidationError(u'Please use a JPEG, or PNG image.')
+
+                if len(avatar) > (10 * 1024):
+                    raise forms.ValidationError(
+                        u'Avatar file size may not exceed 10mb.')
+
+            return avatar
+
+
+class AddSetForm(ModelForm):
+    class Meta:
+        model = Set
+        fields = ("title", "genre", "file")
+        GENRE_CHOICE = (
+            ("", "Select genre"),
+            ("techno", "Techno"),
+            ("dnb", "Drum and bass"),
+        )
+        widgets = {
+            "genre": forms.Select(choices=GENRE_CHOICE)
+        }
+
+    def clean_title(self):
+        title = self.cleaned_data["title"]
+
+        if len(title) < 4:
+            raise forms.ValidationError("This title is too short.")
+        elif len(title) > 32:
+            raise forms.ValidationError("This title is too long.")
+
+        return title
