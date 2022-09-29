@@ -34,7 +34,7 @@ def sign_up(request):
 
 def log_in(request):
     if request.method == 'POST':
-        form = LogInForm(request.POST):
+        form = LogInForm(request.POST)
         if form.is_valid():
             login = form.cleaned_data.get('login')
             password = form.cleaned_data.get('password')
@@ -47,5 +47,5 @@ def log_in(request):
 
 def log_out(request):
     logout(request)
-    
+
     return redirect('index')
