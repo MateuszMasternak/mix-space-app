@@ -27,6 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#Email authenticate
+AUTH_USER_MODEL = "music.User"
+AUTHENTICATION_BACKENDS = ["music.backend.CustomUserModelBackend"]
+
 
 # Application definition
 
