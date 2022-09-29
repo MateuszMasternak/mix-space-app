@@ -1,19 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 
 from .forms import SignUpForm, LogInForm
 
 
 def index(request):
-    if request.method == 'POST':
-        pass
-    elif request.method == 'GET':
-        sign_up_form = SignUpForm
+    sign_up_form = SignUpForm
 
-        render(request, 'index.html', {
-            'sign_up_form': sign_up_form
-        })
+    render(request, 'index.html', {
+        'sign_up_form': sign_up_form
+    })
 
 
 def sign_up(request):
@@ -29,6 +27,9 @@ def sign_up(request):
             login(request, user)
 
             return redirect('index')
+        else:
+            return JsonResponse({'error': 'Some of entered data is invalid.'},
+            status=400)
 
 
 
@@ -43,6 +44,9 @@ def log_in(request):
             login(request, user)
 
             return redirect('index')
+        else:
+            return JsonResponse({'error': 'Some of entered data is invalid.'},
+            status=400)       
 
 
 def log_out(request):
