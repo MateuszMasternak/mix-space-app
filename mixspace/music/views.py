@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
 from django.http import JsonResponse
 
 from .forms import SignUpForm, LogInForm
@@ -53,3 +52,4 @@ def log_out(request):
     logout(request)
 
     return redirect('index')
+
