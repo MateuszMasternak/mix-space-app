@@ -10,7 +10,7 @@ def index(request):
     log_in_form = LogInForm
     add_set_form = AddSetForm
 
-    render(request, 'index.html', {
+    return render(request, 'music/index.html', {
         'sign_up_form': sign_up_form,
         'log_in_form': log_in_form,
         'add_set_form': add_set_form
@@ -61,9 +61,11 @@ def log_out(request):
 def show_user(reuqest, username):
     user = User.objects.get(username=username)
 
-    return render(request, "music/show_profile.html", {
-        "profile_owner": user
-    })
+    data = {
+        'user_data': user.serialize
+    }
+
+    return JsonResponse(data)
 
 
 def show_tracks(request):

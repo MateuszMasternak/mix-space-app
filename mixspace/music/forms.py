@@ -1,6 +1,9 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.core.validators import validate_email
+from django.forms import ModelForm
 from django import forms
 from .models import User, Set
+import string
 
 
 class SignUpForm(UserCreationForm):
@@ -77,6 +80,8 @@ class UserAvatarForm(forms.ModelForm):
                 if len(avatar) > (10 * 1024):
                     raise forms.ValidationError(
                         u'Avatar file size may not exceed 10mb.')
+            except AttributeError:
+                pass
 
             return avatar
 
