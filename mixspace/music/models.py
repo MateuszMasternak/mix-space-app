@@ -5,7 +5,7 @@ from django.core.validators import MinLengthValidator, FileExtensionValidator
 
 class User(AbstractUser):
     email_verified = models.BooleanField(default=False)
-    avatar = models.ImageField()
+    avatar = models.ImageField(upload_to='music/media/avatars', default='default.jpg')
 
     def serialize(self):
         return {
