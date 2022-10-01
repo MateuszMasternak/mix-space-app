@@ -2,7 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 
+from .models import User
 from .forms import SignUpForm, LogInForm, AddSetForm, UserAvatarForm
+
+from datetime import datetime
 
 
 def index(request):
@@ -28,7 +31,7 @@ def sign_up(request):
 
             form.save()
 
-            return JsonResponse({'error': 'Log in will be enabled after email verification.'},
+            return JsonResponse({'info': 'Log in will be enabled after email verification.'},
             status=201)
 
         else:
@@ -53,13 +56,29 @@ def log_in(request):
                 status=400)  
         else:
             return JsonResponse({'error': 'Some of entered data is invalid.'},
-            status=400)       
+            status=400)
 
 
 def log_out(request):
     logout(request)
 
     return redirect('index')
+
+
+def upload(request):
+    if request.method == 'POST':
+        form = AddSetForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_set = form.save(commit=False)
+            new_set.artist = User.objects.get(username=request.user.username)
+            new_set.time_added = datetime.now()
+            new_set.save()
+
+            return JsonResponse({'info': 'Track is added successfully.'},
+            status=201)  
+        else:
+            return JsonResponse({'error': 'Some of entered data is invalid.'},
+            status=400)  
 
 
 def show_user(reuqest, username):

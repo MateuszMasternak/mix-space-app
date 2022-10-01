@@ -31,18 +31,18 @@
                     <li class="nav-item">
                         <a class="nav-link active"  id="nav-home-page-btn" aria-current="page">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="nav-upload-btn">Upload</a>
-                    </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link">My Profile</a>
                         </li>
-                        <li>
-                            <a class="nav-item">Following</a>
+                        <li class="nav-item">
+                            <a class="nav-link" id="nav-upload-btn">Upload</a>
                         </li>
-                        <li>
-                            <a class="nav-item">Liked</a>
+                        <li class="nav-item">
+                            <a class="nav-link">Following</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link">Liked</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'log_out' %}">Log out</a>
@@ -53,6 +53,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="nav-sing-up-btn">Sign up</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="nav-upload-btn">Upload</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -76,65 +79,89 @@
 
     <div id="home-page">
         <h1 class="h1-pos">Last added tracks.</h1>
+        <div class="d-flex align-items-center flex-column p-4">
+            <div id="card-container">
+            </div>
+            <div id="loader">
+            <div class="skeleton-card"></div>
+            </div>
+            <div class="card-actions">
+            <span>Showing 
+                <span id="card-count"></span> of 
+                <span id="card-total"></span> last added tracks.      
+            </span>
+            </div>
+        </div>
     </div>
 
-    <div id="log-in">
-        <h1 class="h1-pos">Log in.</h1>
-        <form method="post" action="{% url 'log_in' %}" class="d-flex align-items-center flex-column p-4" id="log-in-form">
-            {% csrf_token %}
-            <div class="form-floating mb-3 d-flex align-items-center flex-column">
-                {% render_field log_in_form.login class="form-control field-width" placeholder="Login" %}
-                <label for="id_login" class="form-label">Login</label>
-            </div>
-            <div class="form-floating mb-3 d-flex align-items-center flex-column">
-                {% render_field log_in_form.password class="form-control field-width" placeholder="Password" %}
-                <label for="id_password" class="form-label">Password</label>
-            </div>
-            <button type="submit" class="btn btn-outline-primary submit log-in-btn" name="logIn">Log in</button>
-        </form>
-        <p class="sign-up-redirect">Don't have account yet? <span id="login-to-redirect-btn">Sign up</span> then!</p>
-    </div>
+    {% if not user.is_authenticated %}
+        <div id="log-in">
+            <h1 class="h1-pos">Log in.</h1>
+            <p class="text-warning" id="upload-info"></p>
+            <form method="post" action="{% url 'log_in' %}" class="d-flex align-items-center flex-column p-4" id="log-in-form">
+                {% csrf_token %}
+                <div class="form-floating mb-3 d-flex align-items-center flex-column">
+                    {% render_field log_in_form.login class="form-control field-width" placeholder="Login" %}
+                    <label for="id_login" class="form-label">Login</label>
+                </div>
+                <div class="form-floating mb-3 d-flex align-items-center flex-column">
+                    {% render_field log_in_form.password class="form-control field-width" placeholder="Password" %}
+                    <label for="id_password" class="form-label">Password</label>
+                </div>
+                <button type="submit" class="btn btn-outline-primary submit log-in-btn" name="logIn">Log in</button>
+            </form>
+            <p class="sign-up-redirect">Don't have account yet? <span id="login-to-redirect-btn">Sign up</span> then!</p>
+        </div>
 
-    <div id="sign-up">
-        <h1 class="h1-pos">Sign up.</h1>
-        <p class="text-warning" id="upload-info"></p>
-        <form method="post" action="{% url 'sign_up' %}" class="d-flex align-items-center flex-column p-4" id="sign-up-form" autocomplete="off">
-            {% csrf_token %}
-            <div class="form-floating mb-3">
-                {% render_field sign_up_form.email class="form-control field-width" placeholder="Email" %}
-                <label for="id_email" class="form-label">Email</label>
-            </div>
-            <div class="form-floating mb-3">
-                {% render_field sign_up_form.username class="form-control field-width" maxlength="32" placeholder="Username" %}
-                <label for="id_username" class="form-label">Username</label>
-            </div>
-            <div class="form-floating mb-3">
-                {% render_field sign_up_form.password1 class="form-control field-width" placeholder="Password" %}
-                <label for="id_username" class="form-label">Password</label>
-            </div>
-            <div class="form-text password-form-text">
-                <ul>
-                    <li>Your password can’t be too similar to </br>your other personal information.</li>
-                    <li>Your password must contain at least 8 </br>characters.</li>
-                    <li>Your password can’t be a commonly </br>used password.</li>
-                    <li>Your password can’t be entirely </br>numeric.</li>
-                </ul>
-            </div>
-            <div class="form-floating mb-3 pass-2">
-                {% render_field sign_up_form.password2 class="form-control field-width" placeholder="Confirm password" %}
-                <label for="id_username" class="form-label">Confirm password</label>
-            </div>
+        <div id="sign-up">
+            <h1 class="h1-pos">Sign up.</h1>
+            <form method="post" action="{% url 'sign_up' %}" class="d-flex align-items-center flex-column p-4" id="sign-up-form" autocomplete="off">
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                    {% render_field sign_up_form.email class="form-control field-width" placeholder="Email" %}
+                    <label for="id_email" class="form-label">Email</label>
+                </div>
+                <div class="form-floating mb-3">
+                    {% render_field sign_up_form.username class="form-control field-width su-nick-input" maxlength="32" placeholder="Username" %}
+                    <label for="id_username" class="form-label">Username</label>
+                </div>
+                <div class="form-text username-form-text">
+                    <ul>
+                        <li>Your username must be 4-32 characters </br>long.</li>
+                        <li>Your username must contain only "a-Z", </br>"0-9", "_".</li>
+                    </ul>
+                </div>
+                <div class="form-floating mb-3 pass-1">
+                    {% render_field sign_up_form.password1 class="form-control field-width su-pass-input" placeholder="Password" %}
+                    <label for="id_username" class="form-label">Password</label>
+                </div>
+                <div class="form-text password-form-text">
+                    <ul>
+                        <li>Your password can’t be too similar to </br>your other personal information.</li>
+                        <li>Your password must contain at least 8 </br>characters.</li>
+                        <li>Your password can’t be a commonly </br>used password.</li>
+                        <li>Your password can’t be entirely </br>numeric.</li>
+                    </ul>
+                </div>
+                <div class="form-floating mb-3 pass-2">
+                    {% render_field sign_up_form.password2 class="form-control field-width" placeholder="Confirm password" %}
+                    <label for="id_username" class="form-label">Confirm password</label>
+                </div>
 
-            <button type="submit" class="btn btn-outline-primary submit sign-up-btn" name="signUp">Sign up</button>
-        </form>
-    </div>
+                <button type="submit" class="btn btn-outline-primary submit sign-up-btn" name="signUp">Sign up</button>
+            </form>
+        </div>
+    {% endif %}
 
     <div id="upload">
         <h1 class="h1-pos">Place for your music.</h1>
-        <form method="post" enctype="multipart/form-data" class="d-flex align-items-center flex-column p-4" id="upload-form" autocomplete="off">
+        {% if not user.is_authenticated %}
+            <p class="text-warning" id="upload-info">Only logged in users can upload files.</p>
+        {% endif %}    
+        <form method="post" action="{% url 'upload' %}" enctype="multipart/form-data" class="d-flex align-items-center flex-column p-4" id="upload-form" autocomplete="off">
             {% csrf_token %}
             <div class="form-floating mb-3 d-flex align-items-center flex-column">
-                {% render_field add_set_form.title class="form-control field-width" placeholder="Title" %}
+                {% render_field add_set_form.title class="form-control field-width u-title-input" placeholder="Title" %}
                 <label for="id_title" class="form-label">Title</label>
             </div>
             <div class="form-text title-form-text">
@@ -142,8 +169,8 @@
                     <li>Your mix title must be 4-32 characters </br>long.</li>
                 </ul>
             </div>
-            {% render_field add_set_form.genre class="form-select field-width" %}
-            {% render_field add_set_form.file class="form-control field-width" %}
+            {% render_field add_set_form.genre class="form-select field-width u-genre-input" %}
+            {% render_field add_set_form.file class="form-control field-width u-file-input" %}
             <div class="form-text file-form-text">
                 <ul>
                     <li>Only wav extension is allowed at this </br>moment.</li>
@@ -164,7 +191,12 @@
     <footer>
         <p><small>Copyrights © <a href="https://github.com/MateuszMasternak" class="github-redirect">Mateusz Masternak</a> 2022</small></p>
     </footer>
-    <script src="{% static 'music/js/showPage.js' %}"></script>
+    {% if user.is_authenticated %}
+        <script src="{% static 'music/js/showPageLoggedIn.js' %}"></script>
+    {% else %}
+        <script src="{% static 'music/js/showPageLoggedOut.js' %}"></script>
+    {% endif %}
+    <script src="{% static 'music/js/cards.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 </body>
 </html>
