@@ -31,8 +31,12 @@ MANIFEST
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+<<<<<<< HEAD
 audio/
 avatars/
+=======
+/media/music
+>>>>>>> 9e3720242970c01c15201ac58dae5c37319f45fd
 
 # Environments
 .env
