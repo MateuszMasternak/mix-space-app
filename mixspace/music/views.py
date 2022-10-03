@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 
-from .models import User
+from .models import User, Set
 from .forms import SignUpForm, LogInForm, AddSetForm, UserAvatarForm
 
 from datetime import datetime
@@ -13,12 +14,16 @@ def index(request):
     log_in_form = LogInForm
     add_set_form = AddSetForm
 
-    
+    tracks = Set.objects.all().order_by('-time_added')
+    paginator = Paginator(tracks, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     return render(request, 'music/index.html', {
         'sign_up_form': sign_up_form,
         'log_in_form': log_in_form,
-        'add_set_form': add_set_form
+        'add_set_form': add_set_form,
+        'page_obj': page_obj
     })
 
 
