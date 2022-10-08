@@ -9,6 +9,7 @@ urlpatterns = [
     path('log-in', views.log_in, name='log_in'),
     path('log-out', views.log_out, name='log_out'),
     path('upload', views.upload, name='upload'),
-    path('show-user', views.show_user, name='show_user'),
-    path('show-tracks', views.show_tracks, name='show_tracks'),
+    path('user/<str:username>', views.show_user, name='user'),
+    # path('show-tracks', views.show_tracks, name='show_tracks'),
+    path('likes/<int:id>', views.likes, name='likes')
 ]

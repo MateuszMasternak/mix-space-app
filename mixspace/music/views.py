@@ -10,19 +10,12 @@ from datetime import datetime
 
 
 def index(request):
-    sign_up_form = SignUpForm
-    log_in_form = LogInForm
-    add_set_form = AddSetForm
-
-    tracks = Set.objects.all().order_by('-time_added')
-    paginator = Paginator(tracks, 5)
+    all_tracks = Set.objects.all().order_by('-time_added')
+    paginator = Paginator(all_tracks, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'music/index.html', {
-        'sign_up_form': sign_up_form,
-        'log_in_form': log_in_form,
-        'add_set_form': add_set_form,
         'page_obj': page_obj
     })
 
@@ -42,6 +35,11 @@ def sign_up(request):
         else:
             return JsonResponse({'error': 'Some of entered data is invalid.'},
             status=400)
+    else:
+        form = SignUpForm
+        return render(request, 'music/sign_up.html', {
+            'form': form
+        })
 
 
 
@@ -62,6 +60,12 @@ def log_in(request):
         else:
             return JsonResponse({'error': 'Some of entered data is invalid.'},
             status=400)
+    else:
+        form = LogInForm
+        return render(request, 'music/log_in.html', {
+            'form': form
+        })
+    
 
 
 def log_out(request):
@@ -83,28 +87,65 @@ def upload(request):
             status=201)  
         else:
             return JsonResponse({'error': 'Some of entered data is invalid.'},
-            status=400)  
+            status=400)
+    else:
+        form = AddSetForm
+        return render(request, 'music/upload.html', {
+            'form': form
+        })  
 
 
-def show_user(reuqest, username):
+def show_user(request, username):
     user = User.objects.get(username=username)
-
-    data = {
-        'user_data': user.serialize
-    }
-
-    return JsonResponse(data)
-
-
-def show_tracks(request):
-    last_added = Set.objects.all().order_by('-id')
-    paginator = Paginator(last_added, 5)
+    if request.user.username == username:
+        logged_in = True
+    else:
+        logged_in = False
+        
+    user_tracks = Set.objects.filter(artist=user).order_by('-time_added')
+    paginator = Paginator(user_tracks, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    data = {
-        'data': [track.serialize for track in  page.object_list],
-        'previous_page': objects.has_previous() and objects.previous_page_number() or None,
-        'next_page': objects.has_next() and objects.next_page_number() or None
-    }
-    return JsonResponse(data)
+    return render(request, 'music/user_profile.html', {
+        'username': user.username,
+        'avatar': user.avatar.path,
+        'logged_in': logged_in,
+        'page_obj': page_obj        
+    })
+
+
+# def show_tracks(request):
+#     last_added = Set.objects.all().order_by('-id')
+#     paginator = Paginator(last_added, 5)
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
+
+#     data = {
+#         'data': [track.serialize for track in  page.object_list],
+#         'previous_page': objects.has_previous() and objects.previous_page_number() or None,
+#         'next_page': objects.has_next() and objects.next_page_number() or None
+#     }
+#     return JsonResponse(data)
+
+def likes(request, id):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            track = Set.objects.get(id=id)
+            if User.set_set.filter(pk=id).exists() and request.user is not track.artist:
+                track.likes.remove(request.user)
+            elif request.user is not track.artist:
+                track.likes.add(request.user)
+    else:
+        track = Set.objects.get(id=id)
+        likes_count = track.likes.count()
+        user_liked = False
+        if User.set_set.filter(pk=id).exists() and request.user is not track.artist:
+            user_liked = True
+        
+        data = {
+            'likes_count': likes_count,
+            'user_liked': user_liked
+        }
+        
+        return JsonResponse(data)

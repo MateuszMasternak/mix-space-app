@@ -41,6 +41,8 @@ body {
     padding: 1em;
     border-radius: 3px;
     transition: all 200ms ease-in-out 0s;
+    margin-right: 0.5em;
+    margin-left: 0.5em;
 }
 
 .card-bottom {
@@ -56,12 +58,14 @@ body {
 .track-genre {
     font-size: 0.8em;
     font-weight: bold;
+    color: grey;
 }
 
 .track-datetime {
     font-size: 0.8em;
     margin-top: -1em;
     margin-bottom: 0.6em;
+    color: grey;
 }
 
 .card:hover {
@@ -114,7 +118,15 @@ body {
     text-align: center;
 }
 
-.sign-up-redirect span {
+#home-to-register-btn, #login-to-redirect-btn {
+    color: black;
+}
+
+#home-to-register-btn:hover, #login-to-redirect-btn:hover {
+    color: #0d6efd;
+}
+
+.sign-up-redirect span{
     text-decoration: underline;
 }
 
@@ -159,4 +171,10 @@ footer p {
 
 #log-in, #sign-up, #upload, #user-page {
     display: none;
+}
+
+.default-avatar {
+    width: 100px;
+    height: 100px;
+    background-color: grey;
 }

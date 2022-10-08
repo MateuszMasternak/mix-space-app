@@ -5,7 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelector('#nav-upload-btn').addEventListener('click', () => showPage('upload'));
     document.querySelector('#user-page').addEventListener('click', () => showPage('user-page'));
 
-    document.querySelector('#upload-to-register-btn').addEventListener('click', () => showPage('log-in', p="Only logged in users can upload files."))
+    document.querySelector('#upload-to-register-btn').addEventListener('click', () => showPage('log-in', p="Only logged in users can upload files."));
+    document.querySelector('#login-to-redirect-btn').addEventListener('click', () => showPage('sign-up'));
+    document.querySelector('#home-to-register-btn').addEventListener('click', () => showPage('sign-up'));
 
     showPage('home-page')
 });

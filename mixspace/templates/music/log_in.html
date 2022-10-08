@@ -1,0 +1,23 @@
+{% extends 'music/layout.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}- log in{% endblock %}
+
+{% block body %}
+    <h1 class="h1-pos">Log in.</h1>
+    <p class="text-warning" id="upload-info"></p>
+    <form method="post" action="{% url 'log_in' %}" class="d-flex align-items-center flex-column p-4" id="log-in-form">
+        {% csrf_token %}
+        <div class="form-floating mb-3 d-flex align-items-center flex-column">
+            {% render_field form.login class="form-control field-width" placeholder="Login" %}
+            <label for="id_login" class="form-label">Login</label>
+        </div>
+        <div class="form-floating mb-3 d-flex align-items-center flex-column">
+            {% render_field form.password class="form-control field-width" placeholder="Password" %}
+            <label for="id_password" class="form-label">Password</label>
+        </div>
+        <button type="submit" class="btn btn-outline-primary submit log-in-btn" name="logIn">Log in</button>
+    </form>
+    <p class="sign-up-redirect">Don't have account yet? <a id="login-to-redirect-btn" href="{% url 'sign_up' %}">Sign up</a> then!</p>
+{% endblock %}
