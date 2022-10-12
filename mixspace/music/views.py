@@ -7,6 +7,7 @@ from .models import User, Set
 from .forms import SignUpForm, LogInForm, AddSetForm, UserAvatarForm
 
 from datetime import datetime
+from itertools import chain
 
 
 def index(request):
@@ -166,3 +167,15 @@ def follow(request, username):
         }
         
         return JsonResponse(data)
+    
+    
+def following(request):
+    followed_users = list(request.user.following.all())
+    tracks = Set.objects.filter(artist__in=followed_users).order_by('-time_added')
+    paginator = Paginator(tracks, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'music/following.html', {
+        'page_obj': page_obj
+    })
