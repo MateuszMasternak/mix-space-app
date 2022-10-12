@@ -10,6 +10,6 @@ urlpatterns = [
     path('log-out', views.log_out, name='log_out'),
     path('upload', views.upload, name='upload'),
     path('user/<str:username>', views.show_user, name='user'),
-    # path('show-tracks', views.show_tracks, name='show_tracks'),
+    path('follow/<str:username>', views.follow, name='follow'),
     path('likes/<int:id>', views.likes, name='likes')
 ]
