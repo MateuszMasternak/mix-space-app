@@ -1,0 +1,67 @@
+{% extends 'music/layout.html' %}
+{% load static %}
+
+{% block body %}
+    <h1 class="h1-pos">Tracks of artist you are following.</h1>
+    <div class="d-flex justify-content-center flex-wrap p-4 cards-parent">
+        {% for track in page_obj %}
+            <article class="card">
+                <h3><a href="" class="track-title">{{track.title}}</a></h3>
+                <div class="card-bottom">
+                    <h4><a href="{% url 'user' username=track.artist %}" class="track-artist">{{track.artist | truncatechars:13}}</a></h4>
+                    <div>
+                        <p class="track-genre">{{track.genre}}</p>
+                        <p class="track-datetime">{{track.time_added | date:"d M Y"}}, {{track.time_added | time:"H:i"}}</p>
+                    </div>
+                </div>   
+            </article>
+        {% endfor %}
+    </div>
+
+    <nav class="pagination-parent">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">1</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Previous</a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link" href="?page=1">1</a>
+                </li>
+            {% endif %}
+            {% if page_obj.has_previous and page_obj.has_next %}
+                <li class="page-item active">
+                    <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+                </li>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link"
+                    href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% elif page_obj.paginator.num_pages is 1 %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item active">
+                    <a class="page-link"
+                    href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}
