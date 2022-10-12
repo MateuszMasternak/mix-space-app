@@ -11,6 +11,6 @@ urlpatterns = [
     path('upload', views.upload, name='upload'),
     path('user/<str:username>', views.show_user, name='user'),
     path('follow/<str:username>', views.follow, name='follow'),
-    path('likes/<int:id>', views.likes, name='likes'),
+    path('like/<int:id>', views.like, name='like'),
     path('following', views.following, name='following')
 ]

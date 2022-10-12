@@ -10,25 +10,25 @@ function showFollowButton(followForm) {
     const pathArray = window.location.pathname.split('/');
     const path = `/follow/${pathArray[2]}`;
     fetch(path)
-        .then((response) => response.json())
-        .then((data) => {
-            const btn = followForm.querySelector('button');
-            if (btn) {
-                btn.remove();
-            }
-            button = document.createElement('button');
-            if (data['is_followed'] === true) {
-                button.classList.add('btn', 'btn-outline-danger', 'unfollowButton');
-                button.textContent = 'Unfollow';
-            }
-            else if (data['is_followed'] === false) {
-                button.classList.add('btn', 'btn-outline-primary', 'followButton');
-                button.textContent = 'Follow';   
-            }
-            button.id = 'followButton';
-            button.type = 'submit';
-            followForm.append(button);
-        })
+    .then((response) => response.json())
+    .then((data) => {
+        const btn = followForm.querySelector('button');
+        if (btn) {
+            btn.remove();
+        }
+        button = document.createElement('button');
+        if (data['is_followed'] === true) {
+            button.classList.add('btn', 'btn-outline-danger', 'unfollowButton');
+            button.textContent = 'Unfollow';
+        }
+        else if (data['is_followed'] === false) {
+            button.classList.add('btn', 'btn-outline-primary', 'followButton');
+            button.textContent = 'Follow';   
+        }
+        button.id = 'followButton';
+        button.type = 'submit';
+        followForm.append(button);
+    })
 }
 
 function follow(followForm, e) {
@@ -40,10 +40,10 @@ function follow(followForm, e) {
         method: 'POST',
         body: formData,
     })
-        .then((response) => response.json())
-        .then(() => {
-            showFollowButton(followForm);
-        })
+    .then((response) => response.json())
+    .then(() => {
+        showFollowButton(followForm);
+    })
 }
 
 // function getCookie(name) {
