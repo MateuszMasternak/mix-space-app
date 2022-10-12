@@ -92,8 +92,8 @@ class AddSetForm(ModelForm):
         fields = ("title", "genre", "file")
         GENRE_CHOICE = (
             ("", "Select genre"),
-            ("techno", "Techno"),
-            ("dnb", "Drum and bass"),
+            ("Techno", "Techno"),
+            ("Drum and bass", "Drum and bass"),
         )
         widgets = {
             "genre": forms.Select(choices=GENRE_CHOICE)

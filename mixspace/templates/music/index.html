@@ -17,8 +17,7 @@
             <article class="card">
                 <h3><a href="" class="track-title">{{track.title}}</a></h3>
                 <div class="card-bottom">
-                    <h4><a href="" class="track-artist">{{track.artist | truncatechars:13}}</a></h4>
-                    <p id="get-track-artist" style="display: none;">{{ track.artist }}</p>
+                    <h4><a href="{% url 'user' username=track.artist %}" class="track-artist">{{track.artist | truncatechars:13}}</a></h4>
                     <div>
                         <p class="track-genre">{{track.genre}}</p>
                         <p class="track-datetime">{{track.time_added | date:"d M Y"}}, {{track.time_added | time:"H:i"}}</p>

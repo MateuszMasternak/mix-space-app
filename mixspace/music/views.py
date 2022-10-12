@@ -115,19 +115,6 @@ def show_user(request, username):
     })
 
 
-# def show_tracks(request):
-#     last_added = Set.objects.all().order_by('-id')
-#     paginator = Paginator(last_added, 5)
-#     page_number = request.GET.get('page')
-#     page_obj = paginator.get_page(page_number)
-
-#     data = {
-#         'data': [track.serialize for track in  page.object_list],
-#         'previous_page': objects.has_previous() and objects.previous_page_number() or None,
-#         'next_page': objects.has_next() and objects.next_page_number() or None
-#     }
-#     return JsonResponse(data)
-
 def likes(request, id):
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -136,6 +123,11 @@ def likes(request, id):
                 track.likes.remove(request.user)
             elif request.user is not track.artist:
                 track.likes.add(request.user)
+            return JsonResponse({'success': 'Follows are updated successfully.'},
+            status=204)
+        else:
+            return JsonResponse({'error': 'You must be logged in.'},
+            status=204)
     else:
         track = Set.objects.get(id=id)
         likes_count = track.likes.count()
@@ -146,6 +138,31 @@ def likes(request, id):
         data = {
             'likes_count': likes_count,
             'user_liked': user_liked
+        }
+        
+        return JsonResponse(data)
+ 
+def follow(request, username):
+    if request.method == 'POST':
+        user = User.objects.get(username=username)
+        if request.user in user.followed.all():
+            user.followed.remove(request.user)
+            request.user.following.remove(user)
+        else:
+            user.followed.add(request.user)
+            request.user.following.add(user)
+            
+        return JsonResponse({'success': 'Follows are updated successfully.'},
+        status=200)
+    else:
+        user = User.objects.get(username=username)
+        if request.user in user.followed.all():
+            is_followed = True
+        elif user is not request.user:
+            is_followed = False
+        
+        data = {
+            'is_followed': is_followed,
         }
         
         return JsonResponse(data)

@@ -177,4 +177,40 @@ footer p {
     width: 100px;
     height: 100px;
     background-color: grey;
+    font-weight: bold;
+}
+
+#followForm{
+    margin-left: 4em;
+    width: 6em;
+}
+
+.user-box {
+    margin-top: -1.5em;
+}
+
+.username-h1 {
+    margin-bottom: 0.3em;
+}
+
+.followButton {
+    background-color: #fff;
+    color: #0d6efd;
+    border: 1px solid #ced4da;
+}
+
+.followButton:hover {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+.unfollowButton {
+    background-color: #fff;
+    color: #dc3545;
+    border: 1px solid #ced4da;
+}
+
+.unfollowButton:hover {
+    background-color: #dc3545;
+    color: #fff;
 }

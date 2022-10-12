@@ -29,14 +29,14 @@
                 <div class="collapse navbar-collapse justify-content-lg-between" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-1 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
                         <li class="nav-item">
-                            <a class="nav-link active"  id="nav-home-page-btn" aria-current="page">Home</a>
+                            <a class="nav-link active" href="{% url 'index' %}" id="nav-home-page-btn" aria-current="page">Home</a>
                         </li>
                         {% if user.is_authenticated %}
                             <li class="nav-item">
                                 <a class="nav-link" id="nav-my-profile-btn" href="{% url 'user' username=user.username %}">My Profile</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="nav-upload-btn">Upload</a>
+                                <a class="nav-link" id="nav-upload-btn" href="{% url 'upload' %}">Upload</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link">Following</a>
