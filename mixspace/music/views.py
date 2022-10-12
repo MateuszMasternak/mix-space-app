@@ -116,33 +116,26 @@ def show_user(request, username):
     })
 
 
-def likes(request, id):
+def like(request, id):
     if request.method == 'POST':
-        if request.user.is_authenticated:
-            track = Set.objects.get(id=id)
-            if User.set_set.filter(pk=id).exists() and request.user is not track.artist:
-                track.likes.remove(request.user)
-            elif request.user is not track.artist:
-                track.likes.add(request.user)
-            return JsonResponse({'success': 'Follows are updated successfully.'},
-            status=204)
+        track = Set.objects.get(id=id)
+        if request.user in track.like.all():
+            track.like.remove(request.user)
         else:
-            return JsonResponse({'error': 'You must be logged in.'},
-            status=204)
+            track.like.add(request.user)
+            
+        return JsonResponse({'success': 'Follows are updated successfully.'},
+        status=200)
     else:
         track = Set.objects.get(id=id)
-        likes_count = track.likes.count()
-        user_liked = False
-        if User.set_set.filter(pk=id).exists() and request.user is not track.artist:
-            user_liked = True
-        
+        likes_count = track.like.count()
         data = {
             'likes_count': likes_count,
-            'user_liked': user_liked
         }
         
         return JsonResponse(data)
  
+
 def follow(request, username):
     if request.method == 'POST':
         user = User.objects.get(username=username)
