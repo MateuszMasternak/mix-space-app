@@ -10,7 +10,8 @@ urlpatterns = [
     path('log-out', views.log_out, name='log_out'),
     path('upload', views.upload, name='upload'),
     path('user/<str:username>', views.show_user, name='user'),
-    path('follow/<str:username>', views.follow, name='follow'),
     path('like/<int:id>', views.like, name='like'),
+    path('liked', views.liked, name='liked'),
+    path('follow/<str:username>', views.follow, name='follow'),
     path('following', views.following, name='following')
 ]
