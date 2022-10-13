@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 from .models import User, Set
 from .forms import SignUpForm, LogInForm, AddSetForm, UserAvatarForm
@@ -69,12 +70,14 @@ def log_in(request):
     
 
 
+@login_required(login_url='/log-in')
 def log_out(request):
     logout(request)
 
     return redirect('index')
 
 
+@login_required(login_url='/log-in')
 def upload(request):
     if request.method == 'POST':
         form = AddSetForm(request.POST, request.FILES)
@@ -134,8 +137,22 @@ def like(request, id):
         }
         
         return JsonResponse(data)
+    
+
+@login_required(login_url='/log-in')
+def liked(request):
+    tracks = Set.objects.filter(like=request.user).order_by('-time_added')
+    
+    paginator = Paginator(tracks, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'music/liked.html', {
+        'page_obj': page_obj
+    })
  
 
+@login_required(login_url='/log-in')
 def follow(request, username):
     if request.method == 'POST':
         user = User.objects.get(username=username)
@@ -161,7 +178,8 @@ def follow(request, username):
         
         return JsonResponse(data)
     
-    
+ 
+@login_required(login_url='/log-in')  
 def following(request):
     followed_users = list(request.user.following.all())
     tracks = Set.objects.filter(artist__in=followed_users).order_by('-time_added')
