@@ -197,3 +197,21 @@ def player(request, id):
     return render(request, 'music/player.html', {
         'track': track,
     })
+
+
+def search(request):
+    if request.method == 'POST':
+        q = request.POST['search']
+        tracks = Set.objects.filter(title__icontains=q).order_by('title')
+        if tracks.count() < 1:
+            empty = True
+        else:
+            empty = False
+        paginator = Paginator(tracks, 12)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
+        return render(request, 'music/search.html', {
+            'page_obj': page_obj,
+            'empty': empty
+        })

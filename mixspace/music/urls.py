@@ -14,5 +14,6 @@ urlpatterns = [
     path('liked', views.liked, name='liked'),
     path('follow/<str:username>', views.follow, name='follow'),
     path('following', views.following, name='following'),
-    path('music-player/<int:id>', views.player, name='player')
+    path('music-player/<int:id>', views.player, name='player'),
+    path('search', views.search, name='search')
 ]
