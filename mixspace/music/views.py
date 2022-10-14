@@ -190,3 +190,10 @@ def following(request):
     return render(request, 'music/following.html', {
         'page_obj': page_obj
     })
+    
+
+def player(request, id):
+    track = Set.objects.get(id=id)
+    return render(request, 'music/player.html', {
+        'track': track,
+    })

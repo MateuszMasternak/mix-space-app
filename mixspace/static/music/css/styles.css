@@ -1,5 +1,6 @@
 body {
     background-color: ghostwhite;
+    font-family: Tahoma;
 }
 
 .navbar {
@@ -22,10 +23,10 @@ body {
 }
 
 .track-title {
-    font-size: 0.8em;
+    font-size: 1.3em;
 }
 
-.track-title, .track-artist {
+.track-title, .track-artist, .track-artist-player {
     color: black;
     text-decoration: none;
 }
@@ -52,7 +53,8 @@ body {
 }
 
 .track-artist {
-    font-size: 0.7em;
+    font-size: 0.5em;
+    font-weight: bold;
 }
 
 .track-genre {
@@ -70,6 +72,7 @@ body {
 
 .card:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 }
 
 .pagination-parent {
@@ -185,6 +188,12 @@ footer p {
     width: 6em;
 }
 
+#fakeFollowForm {
+    margin-left: 4em;
+    width: 6em;
+    height: 2em;
+}
+
 .user-box {
     margin-top: -1.5em;
 }
@@ -216,10 +225,91 @@ footer p {
 }
 
 #likeForm {
-    position: absolute;
-    bottom: 2em;
+    /* position: absolute;
+    bottom: 2em; */
+    margin-bottom: -0.3em;
+    width: 2em;
+    height: 1.7em;
 }
 
 #likesCount {
     margin-left: 0.2em;
+    user-select: none;
+    font-size: 1.2em;
+}
+
+#likesCount-player {
+    user-select: none;
+}
+
+.music-player {
+    height: 30em;
+    width: 20em;
+    margin-bottom: 1em;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(210, 218, 255);
+    padding: 1em;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 3px;
+    margin-right: 0.5em;
+    margin-left: 0.5em;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+audio {
+    align-self: center;
+    margin-bottom: 1em;
+}
+
+.track-title-player {
+    font-size: 1.3em;
+    text-align: center;
+    margin-top: 1em;
+    font-weight: bold;
+}
+
+.track-artist-player {
+    font-size: 1em;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 1em;
+}
+
+#likeButton, #unlikeButton {
+    transition: all 200ms ease-in-out 0s;
+}
+
+#likeButton:hover {
+    cursor: pointer;
+    color: #dc3545;
+}
+
+#unlikeButton {
+    color: #dc3545;
+}
+
+#unlikeButton:hover {
+    color: black;
+}
+
+.player-icons {
+    display: flex;
+    justify-content: center;
+    margin-top: 3em;
+}
+
+#likeForm-player {
+    align-self: flex-start;
+    margin-left: 1em;
+}
+
+#likesCount-player {
+    margin-left: 0.2em;
+    font-size: 1.8em;
+}
+
+.genre-date {
+    user-select: none;
 }
