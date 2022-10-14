@@ -87,13 +87,13 @@ def upload(request):
             new_set.time_added = datetime.now()
             new_set.save()
 
-            return JsonResponse({'info': 'Track is added successfully.'},
-            status=201)  
+            return redirect('index') 
         else:
-            return JsonResponse({'error': 'Some of entered data is invalid.'},
-            status=400)
+            return render(request, 'music/upload.html', {
+                'form': form
+        })  
     else:
-        form = AddSetForm
+        form = AddSetForm()
         return render(request, 'music/upload.html', {
             'form': form
         })  
