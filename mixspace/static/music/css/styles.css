@@ -313,3 +313,9 @@ audio {
 .genre-date {
     user-select: none;
 }
+
+.empty-search {
+    text-align: center;
+    margin-top: 1em;
+    font-size: 1.5em;
+}

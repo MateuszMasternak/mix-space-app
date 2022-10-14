@@ -43,4 +43,22 @@ document.addEventListener('DOMContentLoaded', function() {
         liked.classList.add('active');
         liked.ariaCurrent = 'page';
     }
+
+    // const searchForm = document.querySelector('#search-nav');
+    // searchForm.addEventListener('submit', (e) => search(searchForm, e));
 })
+
+// function search(form, e) {
+//     e.preventDefault();
+//     const input = form.querySelector('#search-input');
+//     path = `/search/${input}`;
+//     formData = new FormData(form);
+//     fetch(path, {
+//         method: 'POST',
+//         body: formData,
+//     })
+//     .then((response) => response.json())
+//     .then(() => {
+//         showFollowButton(followForm);
+//     })
+// }
