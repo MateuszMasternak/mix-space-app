@@ -5,38 +5,7 @@
 
 {% block body %}
     <h1 class="h1-pos">Tracks you liked.</h1>
-    <div class="d-flex justify-content-center flex-wrap p-4 cards-parent">
-        {% for track in page_obj %}
-            <article class="card">
-                <h2 class="track-title">{{track.title}}</h2>
-                <div class="card-bottom">
-                    <div class="likeFormParent">
-                        <form method="post" action="{% url 'like' id=track.id %}" id="likeForm" class="d-flex">
-                            {% csrf_token %}
-                            <p id="trackId" hidden>{{ track.id }}</p>
-                            <div id="heart">
-                                {% if user not in track.like.all %}
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16" id="likeButton">
-                                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                                    </svg>
-                                {% else %}
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16" id="unlikeButton">
-                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-                                    </svg>
-                                {% endif %}
-                            </div>
-                            <p id="likesCount"></p>
-                        </form>
-                        <h3><a href="{% url 'user' username=track.artist %}" class="track-artist">{{track.artist | truncatechars:13}}</a></h3>
-                    </div>
-                    <div class="genre-date">
-                        <p class="track-genre">{{track.genre}}</p>
-                        <p class="track-datetime">{{track.time_added | date:"d M Y"}}, {{track.time_added | time:"H:i"}}</p>
-                    </div>
-                </div>   
-            </article>
-        {% endfor %}
-    </div>
+    {% include 'music/include/tracks.html' %}
 
     <nav class="pagination-parent">
         <ul class="pagination justify-content-center">
@@ -84,5 +53,4 @@
             {% endif %}
         </ul>
     </nav>
-    <script src="{% static 'music/js/cards.js' %}"></script>
 {% endblock %}

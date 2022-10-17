@@ -16,5 +16,6 @@ urlpatterns = [
     path('following', views.following, name='following'),
     path('music-player/<int:id>', views.player, name='player'),
     path('search', views.search, name='search'),
-    path('avatar-upload', views.avatar_upload, name='avatar_upload')
+    path('avatar-upload', views.avatar_upload, name='avatar_upload'),
+    path('activate/<uidb64>/<token>', views.activate, name='activate')
 ]

@@ -3,12 +3,59 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import EmailMessage
+
 
 from .models import User, Set
 from .forms import SignUpForm, LogInForm, AddSetForm, UserAvatarForm
+from .tokens import account_activation_token
 
 from datetime import datetime
 from itertools import chain
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except:
+        user = None
+        
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        
+        messages.success(request, 'Thank you for your email confirmation. \
+        now you can login to your account.')
+    else:
+        messages.error(request, 'Activation link is invalid.')
+    
+    return redirect('log_in')
+
+
+def activate_email(request, user, email):
+    mail_subject = 'Activate mix-space\'s user account.'
+    message = render_to_string('music/messages/activate_mess.html', {
+        'user': user.username,
+        'domain': get_current_site(request).domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+        'Protocol': 'https' if request.is_secure() else 'http'
+    })
+    email = EmailMessage(mail_subject, message, to=[email])
+    if email.send():
+        messages.success(request, f'<li>Dear \
+        <b>{user}</b>, please go to your email <b>{email}</b> inbox and  \
+        click on received activation link to confirm and complete the \
+        registration. <b>Note:</b> Check your spam folder.</li>')
+    else:
+        messages.error(request, f'Problem sending email to {email}, check if \
+                       you typed it correctly.')
 
 
 def index(request):
@@ -25,24 +72,17 @@ def index(request):
 def sign_up(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
-        if form.is_valid():
-            login_ = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password1')
-            
+        if form.is_valid():            
             user = form.save(commit=False)
             user.is_active = False
             form.save()
 
-            form = LogInForm
-            
-            return render(request, 'music/log_in.html', {
-                'form': form,
-                'info': 'Log in will be enabled after email verification. Check your email.'
-            })
+            activate_email(request, user, form.cleaned_data.get('email'))
+            return redirect('log_in')
         else:
-            return render(request, 'music/sign_up.html', {
-                'form': form
-            })
+            for error in list(form.errors.values()):
+                messages.error(request, error)
+            return redirect('sign_up')
     else:
         form = SignUpForm
         return render(request, 'music/sign_up.html', {
@@ -63,12 +103,12 @@ def log_in(request):
                 login(request, user)
                 return redirect('index')
             else:
-                return render(request, 'music/log_in.html', {
-                    'form': form,
-                    "info": "Invalid login and/or password.",
-                })
+                messages.error(request, '<li>Invalid login and/or password.</li>')
+                return redirect('log_in')
         else:
-            redirect('log_in')
+            for error in list(form.errors.values()):
+                messages.error(request, error)
+            return redirect('log_in')
     else:
         form = LogInForm
         return render(request, 'music/log_in.html', {
@@ -96,9 +136,9 @@ def upload(request):
 
             return redirect('index')
         else:
-            return render(request, 'music/upload.html', {
-                'form': form
-        })  
+            for error in list(form.errors.values()):
+                messages.error(request, error)
+            return redirect('upload')
     else:
         form = AddSetForm()
         return render(request, 'music/upload.html', {
@@ -238,10 +278,11 @@ def avatar_upload(request):
         form = UserAvatarForm(request.POST, request.FILES)
         if form.is_valid():
             user = User.objects.get(pk=request.user.id)
-            # user.avatar=request.FILES['avatar']
             user.avatar = form.cleaned_data['avatar']
             user.save()
             
             return redirect(request.META['HTTP_REFERER'])
         else:
+            for error in list(form.errors.values()):
+                messages.error(request, error)
             return redirect(request.META['HTTP_REFERER'])
