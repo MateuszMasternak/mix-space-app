@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import validate_email
+from django.core.files.images import get_image_dimensions
 from django.forms import ModelForm
 from django import forms
 from .models import User, Set
@@ -12,27 +13,6 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'username', 'password1', 'password2')
-    
-        def clean_username(self):
-            username = self.cleaned_data["username"]
-
-            if len(username) < 5:
-                raise forms.ValidationError("This username is too short.")
-            elif len(username) > 32:
-                raise forms.ValidationError("This username is too long.")
-
-            signs = "".join(string.ascii_letters + string.digits + "_")
-            for sign in username:
-                if sign not in signs:
-                    raise forms.ValidationError('This username contain not allowed signs.')
-
-            try:
-                if User.objects.get(username=username):
-                    raise forms.ValidationError("This username is is unavailable.")
-            except User.DoesNotExist:
-                pass
-
-            return username
 
     def clean_email(self):
         email = self.cleaned_data["email"]
@@ -49,6 +29,27 @@ class SignUpForm(UserCreationForm):
             raise forms.ValidationError("This email is incorrect.")
 
         return email
+    
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+
+        if len(username) < 5:
+            raise forms.ValidationError("This username is too short.")
+        elif len(username) > 32:
+            raise forms.ValidationError("This username is too long.")
+
+        signs = "".join(string.ascii_letters + string.digits + "_")
+        for sign in username:
+            if sign not in signs:
+                raise forms.ValidationError('This username contain not allowed signs.')
+
+        try:
+            if User.objects.get(username=username):
+                raise forms.ValidationError("This username is is unavailable.")
+        except User.DoesNotExist:
+            pass
+
+        return username
 
 
 class LogInForm(forms.Form):
@@ -61,29 +62,29 @@ class UserAvatarForm(forms.ModelForm):
         model = User
         fields = ('avatar',)
     
-        def clean_avatar(self):
-            avatar = self.cleaned_data['avatar']
+    def clean_avatar(self):
+        avatar = self.cleaned_data['avatar']
 
-            try:
-                w, h = get_image_dimensions(avatar)
+        try:
+            w, h = get_image_dimensions(avatar)
 
-                max_width = max_height = 100
-                if w > max_width or h > max_height:
-                    raise forms.ValidationError(
-                        u'Please use an image that is '
-                        '%s x %s pixels or smaller.' % (max_width, max_height))
+            max_width = max_height = 100
+            if w > max_width or h > max_height:
+                raise forms.ValidationError(
+                    u'Please use an image that is '
+                    '%s x %s pixels or smaller.' % (max_width, max_height))
 
-                main, sub = avatar.content_type.split('/')
-                if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'png']):
-                    raise forms.ValidationError(u'Please use a JPEG, or PNG image.')
+            main, sub = avatar.content_type.split('/')
+            if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'png']):
+                raise forms.ValidationError(u'Please use a JPEG, or PNG image.')
 
-                if len(avatar) > (10 * 1024):
-                    raise forms.ValidationError(
-                        u'Avatar file size may not exceed 10mb.')
-            except AttributeError:
-                pass
+            if len(avatar) > (10 * 1024):
+                raise forms.ValidationError(
+                    u'Avatar file size may not exceed 10mb.')
+        except AttributeError:
+            pass
 
-            return avatar
+        return avatar
 
 
 class AddSetForm(ModelForm):

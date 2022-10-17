@@ -6,6 +6,36 @@
 
 {% block body %}
     <h1 class="h1-pos">Sign up.</h1>
+    <div class="errors">
+        {% if form.errors.email %}
+            <div class="form-text text-warning log-in-info">
+                {% for error in form.errors.email %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if form.errors.username %}
+            <div class="form-text text-warning log-in-info">
+                {% for error in form.errors.username %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if form.errors.password1 %}
+            <div class="form-text text-warning log-in-info">
+                {% for error in form.errors.password1 %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if form.errors.password2 %}
+            <div class="form-text text-warning log-in-info">
+                {% for error in form.errors.password2 %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
     <form method="post" action="{% url 'sign_up' %}" class="d-flex align-items-center flex-column p-4" id="sign-up-form" autocomplete="off">
         {% csrf_token %}
         <div class="form-floating mb-3">
@@ -16,6 +46,7 @@
             {% render_field form.username class="form-control field-width su-nick-input" maxlength="32" placeholder="Username" %}
             <label for="id_username" class="form-label">Username</label>
         </div>
+
         <div class="form-text username-form-text">
             <ul>
                 <li>Your username must be 4-32 characters </br>long.</li>
@@ -26,6 +57,7 @@
             {% render_field form.password1 class="form-control field-width su-pass-input" placeholder="Password" %}
             <label for="id_username" class="form-label">Password</label>
         </div>
+
         <div class="form-text password-form-text">
             <ul>
                 <li>Your password can’t be too similar to </br>your other personal information.</li>
