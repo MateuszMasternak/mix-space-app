@@ -36,6 +36,16 @@ ALLOWED_HOSTS = []
 AUTH_USER_MODEL = "music.User"
 AUTHENTICATION_BACKENDS = ["music.backend.CustomUserModelBackend"]
 
+#Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_FROM = str(os.getenv('EMAIL'))
+EMAIL_HOST_USER = str(os.getenv('EMAIL'))
+EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_PASSWORD'))
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+PASSWORD_RESET_TIMEOUT = 86400
 
 # Application definition
 

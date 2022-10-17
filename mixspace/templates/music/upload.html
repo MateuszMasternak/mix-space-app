@@ -6,29 +6,8 @@
 
 {% block body %}
     <h1 class="h1-pos">Place for your music.</h1>
-    <div class="errors">
-        {% if form.errors.title %}
-            <div class="form-text text-warning log-in-info">
-                {% for error in form.errors.title %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-        {% if form.errors.genre %}
-            <div class="form-text text-warning log-in-info">
-                {% for error in form.errors.genre %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-        {% if form.errors.file %}
-            <div class="form-text text-warning log-in-info">
-                {% for error in form.errors.file %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-    </div>
+    {% include 'music/include/messages.html' %}
+
     {% if not user.is_authenticated %}
         <p class="text-warning" id="upload-info">Only logged in users can upload files.</p>
     {% endif %}    

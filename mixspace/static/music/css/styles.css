@@ -370,7 +370,16 @@ audio {
 }
 
 #avatarForm {
-    margin-top: 1em;
+    margin-top: 2em;
     display: none;
 }
 
+
+.messages-box {
+    margin-top: 1em;
+    margin-bottom: -2em;
+}
+
+.close:hover {
+    cursor: pointer;
+}
