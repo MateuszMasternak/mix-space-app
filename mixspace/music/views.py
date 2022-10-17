@@ -28,6 +28,9 @@ def sign_up(request):
         if form.is_valid():
             login_ = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password1')
+            
+            user = form.save(commit=False)
+            user.is_active = False
             form.save()
 
             form = LogInForm
