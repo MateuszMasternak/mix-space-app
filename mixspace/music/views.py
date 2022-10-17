@@ -28,15 +28,18 @@ def sign_up(request):
         if form.is_valid():
             login_ = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password1')
-
             form.save()
 
-            return JsonResponse({'info': 'Log in will be enabled after email verification.'},
-            status=201)
-
+            form = LogInForm
+            
+            return render(request, 'music/log_in.html', {
+                'form': form,
+                'info': 'Log in will be enabled after email verification. Check your email.'
+            })
         else:
-            return JsonResponse({'error': 'Some of entered data is invalid.'},
-            status=400)
+            return render(request, 'music/sign_up.html', {
+                'form': form
+            })
     else:
         form = SignUpForm
         return render(request, 'music/sign_up.html', {
@@ -57,11 +60,12 @@ def log_in(request):
                 login(request, user)
                 return redirect('index')
             else:
-                return JsonResponse({'error': 'Invalid login and/or password.'},
-                status=400)  
+                return render(request, 'music/log_in.html', {
+                    'form': form,
+                    "info": "Invalid login and/or password.",
+                })
         else:
-            return JsonResponse({'error': 'Some of entered data is invalid.'},
-            status=400)
+            redirect('log_in')
     else:
         form = LogInForm
         return render(request, 'music/log_in.html', {
@@ -87,7 +91,7 @@ def upload(request):
             new_set.time_added = datetime.now()
             new_set.save()
 
-            return redirect('index') 
+            return redirect('index')
         else:
             return render(request, 'music/upload.html', {
                 'form': form
@@ -110,12 +114,20 @@ def show_user(request, username):
     paginator = Paginator(user_tracks, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    
+    form = UserAvatarForm()
+    
+    try:
+        avatar = user.avatar.url
+    except ValueError:
+        avatar = False
 
     return render(request, 'music/user_profile.html', {
         'username': user.username,
-        'avatar': user.avatar.path,
+        'avatar': avatar,
         'logged_in': logged_in,
-        'page_obj': page_obj        
+        'page_obj': page_obj,
+        'form': form        
     })
 
 
@@ -202,7 +214,7 @@ def player(request, id):
 def search(request):
     if request.method == 'POST':
         q = request.POST['search']
-        tracks = Set.objects.filter(title__icontains=q).order_by('title')
+        tracks = Set.objects.filter(title__icontains=q).order_by('-title')
         if tracks.count() < 1:
             empty = True
         else:
@@ -215,3 +227,18 @@ def search(request):
             'page_obj': page_obj,
             'empty': empty
         })
+
+
+@login_required(login_url='/log-in')
+def avatar_upload(request):
+    if request.method == 'POST':
+        form = UserAvatarForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = User.objects.get(pk=request.user.id)
+            # user.avatar=request.FILES['avatar']
+            user.avatar = form.cleaned_data['avatar']
+            user.save()
+            
+            return redirect(request.META['HTTP_REFERER'])
+        else:
+            return redirect(request.META['HTTP_REFERER'])

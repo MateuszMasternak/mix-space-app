@@ -8,7 +8,11 @@
     <div class="d-flex align-items-center flex-column p-4 user-box">
         <h1 class="h1-pos username-h1">{{ username | truncatechars:21 }}</h1>
         <div class="d-flex justify-content-between align-items-center">
-            <div class="default-avatar d-flex justify-content-center align-items-center" style="margin-top: 0.5em;">avatar</div>
+            <div class="default-avatar" id="avatar" data-hover="Upload">
+                {% if avatar %}
+                    <img {% if username == user.username %}id="avatarImg"{% endif %} src="{{ avatar }}" alt="" height="100px" width="100px">
+                {% endif %}    
+            </div>
             {% if user.is_authenticated %}
                 <form method="post" action="{% url 'follow' username=username %}" id="followForm" class="d-flex align-items-center flex-column">
                     {% csrf_token %}
@@ -17,6 +21,20 @@
                 <div id="fakeFollowForm"></div>
             {% endif %}
         </div>
+        {% if user.is_authenticated and user.username == username %}
+            <form method="post" action="{% url 'avatar_upload' %}" enctype="multipart/form-data" id="avatarForm">
+                {% csrf_token %}
+                {% render_field form.avatar class="form-control" %}
+                <div class="form-text avatar-form-text">
+                    <ul>
+                        <li>Image must be 100x100 pixels or smaller.</li>
+                        <li>Image must be JPEG or PNG type.</li>
+                        <li>Image size must be 10mb or less.</li>
+                    </ul>
+                </div>
+                <button type="submit" class="btn btn-outline-primary submit upload-btn" name="upload">Upload</button>
+            </form>
+        {% endif %}
     </div>
 
     <div class="d-flex justify-content-center flex-wrap p-4 cards-parent">
@@ -102,4 +120,5 @@
         <script src="{% static 'music/js/userProfile.js' %}"></script>
     {% endif %}
     <script src="{% static 'music/js/cards.js' %}"></script>
+    <script src="{% static 'music/js/showForm.js' %}"></script>
 {% endblock %}

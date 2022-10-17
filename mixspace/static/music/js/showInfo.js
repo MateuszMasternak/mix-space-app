@@ -15,11 +15,11 @@ document.addEventListener('DOMContentLoaded', function() {
         title.addEventListener('focus', () => show('title-form-text'))
         title.addEventListener('blur', () => hide('title-form-text'))
     }
-    file  = document.querySelector('.u-file-input');
-    if (file) {
-        file.addEventListener('focus', () => show('file-form-text'))
-        file.addEventListener('blur', () => hide('file-form-text'))
-    }
+    // file  = document.querySelector('.u-file-input');
+    // if (file) {
+    //     file.addEventListener('focus', () => show('file-form-text'))
+    //     file.addEventListener('blur', () => hide('file-form-text'))
+    // }
 })
 
 function show(infoClass) {

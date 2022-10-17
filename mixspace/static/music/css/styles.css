@@ -46,6 +46,39 @@ body {
     margin-left: 0.5em;
 }
 
+.card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+#avatar {
+    transition: all 200ms ease-in-out 0s;
+    position: relative;
+}
+
+#avatar:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+#avatar:before {
+    content: attr(data-hover);
+    transition: all 200ms ease-in-out 0s;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+}
+
+#avatar:hover:before {
+    opacity: 1;
+    visibility: visible;
+  }
+
 .card-bottom {
     display: flex;
     justify-content: space-between;
@@ -68,11 +101,6 @@ body {
     margin-top: -1em;
     margin-bottom: 0.6em;
     color: grey;
-}
-
-.card:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
 }
 
 .pagination-parent {
@@ -103,7 +131,7 @@ body {
     margin-top: 0.3em;
     margin-right: 2.8em;
     margin-bottom: -1.5em;
-    display: none;
+    /* display: none; */
 }
 
 .submit {
@@ -182,6 +210,7 @@ footer p {
     height: 100px;
     background-color: grey;
     font-weight: bold;
+    margin-top: 0.5em;
 }
 
 #followForm{
@@ -320,3 +349,28 @@ audio {
     margin-top: 1em;
     font-size: 1.5em;
 }
+
+.log-in-info {
+    text-align: center;
+    margin: 0.5em 1em -0.5em 1em;
+    font-size: 1.2em;
+}
+
+.log-in-info p {
+    margin: 0em;
+}
+
+.errors {
+    margin-top: 1em;
+}
+
+.avatar-form-text {
+    margin-left: -1em;
+    margin-bottom: -1em;
+}
+
+#avatarForm {
+    margin-top: 1em;
+    display: none;
+}
+

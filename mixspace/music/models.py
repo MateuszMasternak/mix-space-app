@@ -5,7 +5,7 @@ from django.core.validators import MinLengthValidator, FileExtensionValidator
 
 class User(AbstractUser):
     email_verified = models.BooleanField(default=False)
-    avatar = models.ImageField(upload_to='music/media/avatars', default='default.jpg')
+    avatar = models.ImageField(upload_to='music/media/avatars', null=True)
     following = models.ManyToManyField('self', symmetrical=False, related_name='follow')
     followed = models.ManyToManyField('self', symmetrical=False, related_name='followers')
 
