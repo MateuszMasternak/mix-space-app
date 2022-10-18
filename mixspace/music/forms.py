@@ -1,6 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import validate_email
 from django.core.files.images import get_image_dimensions
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV2Checkbox
 from django.forms import ModelForm
 from django import forms
 from .models import User, Set
@@ -55,6 +57,7 @@ class SignUpForm(UserCreationForm):
 class LogInForm(forms.Form):
     login = forms.CharField(max_length=320, required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
 
 
 class UserAvatarForm(forms.ModelForm):

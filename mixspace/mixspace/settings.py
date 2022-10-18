@@ -47,6 +47,11 @@ EMAIL_USE_TLS = True
 
 PASSWORD_RESET_TIMEOUT = 86400
 
+# Captcha
+RECAPTCHA_PUBLIC_KEY = str(os.getenv('RCAP_PUBLIC'))
+RECAPTCHA_PRIVATE_KEY = str(os.getenv('RCAP_PRIVATE'))
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -58,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'music',
     'widget_tweaks',
+    'captcha',
 ]
 
 MIDDLEWARE = [

@@ -12,7 +12,7 @@
                 </div>
             {% elif message.tags == 'error' %}
                 <div class="field-width alert alert-danger alert-dismissible d-flex justify-content-between" role="alert">
-                    <div>
+                    <div class='mess'>
                         {{ message|safe|escape }}
                     </div>
                     <span class="close" data-dismiss="alert" aria-label="close">&times;</span>
