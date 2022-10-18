@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     messages.forEach(message => {
         message.addEventListener('click', function() {
             const parent = message.parentElement;
-            parent.style.display = 'none';
+            parent.remove();
         })
     });
 })
