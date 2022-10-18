@@ -393,3 +393,8 @@ audio {
 .captcha {
     margin-top: 0.8em;
 }
+
+.email-conf {
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
+}
