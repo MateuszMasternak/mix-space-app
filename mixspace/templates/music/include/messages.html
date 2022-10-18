@@ -2,14 +2,10 @@
     <div class="d-flex flex-column align-items-center justify-content-center messages-box">
         {% for message in messages %}
             {% if message.tags == 'success' %}
-                <div class="field-width alert alert-success alert-dismissible" role="alert">
-                    <div>
-                        <span class="close" data-dismiss="alert" aria-label="close">&times;</span>
-                    </div>
-                    <div>
-                        {{ message|safe|escape }}
-                    </div>
-                </div>
+            <div class="field-width alert alert-info alert-dismissible" role="alert">
+                {{ message|safe|escape }}
+                <span class="close" data-dismiss="alert" aria-label="close">&times;</span>
+            </div>
             {% elif message.tags == 'error' %}
                 <div class="field-width alert alert-danger alert-dismissible d-flex justify-content-between" role="alert">
                     <div class='mess'>

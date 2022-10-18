@@ -7,8 +7,10 @@
     {% if user.is_authenticated %}
         <h3 class="h1-pos">Hello, <span id="user-username">{{ user.username | truncatechars:21 }}</span>.</h3>
         <p id="get-current-user" style="display: none;">{{ user.username }}</p>
+        {% include 'music/include/messages.html' %}
     {% else %}
         <h2 class="h1-pos">Don't have account yet? <br> <a id="home-to-register-btn" href="{% url 'sign_up' %}">Sign up!</a></h2>
+        {% include 'music/include/messages.html' %}
     {% endif %}
     <h1 class="h1-pos">Last added tracks.</h1>
     {% include 'music/include/tracks.html' %}
