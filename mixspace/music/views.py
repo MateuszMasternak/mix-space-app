@@ -30,10 +30,12 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         
-        messages.success(request, '<ul class="errorlist"><li>Thank you for \
+        messages.success(request, '<h3>Email confirmation.</h3></br> \
+        <ul class="errorlist"><li>Thank you for \
         your email confirmation. now you can login to your account.</li></ul>')
     else:
-        messages.error(request, '<ul class="errorlist"><li>Activation link is \
+        messages.error(request, '<h3>Email confirmation.</h3></br> \
+        <ul class="errorlist"><li>Activation link is \
         invalid.</li></ul>')
     
     return redirect('log_in')
@@ -50,12 +52,14 @@ def activate_email(request, user, email):
     })
     email = EmailMessage(mail_subject, message, to=[email])
     if email.send():
-        messages.success(request, f'<ul class="errorlist"><li>Dear \
+        messages.success(request, f'<h3 class="email-conf">Email confirmation.</h3></br> \
+        <ul class="errorlist"><li>Dear \
         <b>{user}</b>, please go to your email <b>{email}</b> inbox and  \
         click on received activation link to confirm and complete the \
         registration. <b>Note:</b> Check your spam folder.</li></ul>')
     else:
-        messages.error(request, f'<ul class="errorlist"><li>Problem sending \
+        messages.error(request, f'<h3>Email confirmation.</h3></br> \
+        <ul class="errorlist"><li>Problem sending \
         email to {email}, check if you typed it correctly.</ul>/<li>')
 
 
@@ -104,8 +108,8 @@ def log_in(request):
                 login(request, user)
                 return redirect('index')
             else:
-                messages.error(request, 'Invalid \
-                login and/or password.')
+                messages.error(request, '<ul class="errorlist"><li>Invalid \
+                login and/or password.</li></ul>')
                 return redirect('log_in')
         else:
             for key, error in list(form.errors.items()):
