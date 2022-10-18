@@ -33,7 +33,8 @@ def activate(request, uidb64, token):
         messages.success(request, '<ul class="errorlist"><li>Thank you for \
         your email confirmation. now you can login to your account.</li></ul>')
     else:
-        messages.error(request, 'Activation link is invalid.')
+        messages.error(request, '<ul class="errorlist"><li>Activation link is \
+        invalid.</li></ul>')
     
     return redirect('log_in')
 
@@ -103,11 +104,15 @@ def log_in(request):
                 login(request, user)
                 return redirect('index')
             else:
-                messages.error(request, '<ul class="errorlist"><li>Invalid \
-                login and/or password.</ul></li>')
+                messages.error(request, 'Invalid \
+                login and/or password.')
                 return redirect('log_in')
         else:
-            for error in list(form.errors.values()):
+            for key, error in list(form.errors.items()):
+                if key == 'captcha' and error[0] == 'This field is required.':
+                    messages.error(request, '<ul class="errorlist"><li>You must \
+                    pass the reCAPTCHA.</li></ul>')
+                    continue
                 messages.error(request, error)
             return redirect('log_in')
     else:

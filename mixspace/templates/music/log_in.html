@@ -19,7 +19,8 @@
             {% render_field form.password class="form-control field-width" placeholder="Password" %}
             <label for="id_password" class="form-label">Password</label>
         </div>
-        <button type="submit" class="btn btn-outline-primary submit log-in-btn" name="logIn">Log in</button>
+        {{ form.captcha }}
+        <button type="submit" class="btn btn-outline-primary submit log-in-btn captcha" name="logIn">Log in</button>
     </form>
     <p class="sign-up-redirect">Don't have account yet? <a id="login-to-redirect-btn" href="{% url 'sign_up' %}">Sign up</a> then!</p>
 {% endblock %}
