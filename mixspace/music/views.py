@@ -106,6 +106,8 @@ def log_in(request):
             user = authenticate(username=login_, password=password)
             if user is not None:
                 login(request, user)
+                messages.success(request, '<ul class="errorlist"><li>Logged in \
+                successfully.</li></ul>')
                 return redirect('index')
             else:
                 messages.error(request, '<ul class="errorlist"><li>Invalid \
@@ -131,6 +133,8 @@ def log_in(request):
 def log_out(request):
     logout(request)
 
+    messages.success(request, '<ul class="errorlist"><li>Logged out \
+    successfully.</li></ul>')
     return redirect('index')
 
 
