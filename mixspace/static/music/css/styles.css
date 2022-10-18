@@ -380,6 +380,12 @@ audio {
     margin-bottom: -2em;
 }
 
+.close {
+    position: absolute;
+    top: 0.5em;
+    right: 1em;
+}
+
 .close:hover {
     cursor: pointer;
 }
