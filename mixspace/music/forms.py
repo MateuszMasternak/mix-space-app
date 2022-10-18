@@ -11,10 +11,11 @@ import string
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True, label='Email')
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'password1', 'password2')
+        fields = ('email', 'username', 'password1', 'password2', 'captcha')
 
     def clean_email(self):
         email = self.cleaned_data["email"]
