@@ -8,7 +8,7 @@
     <div class="d-flex align-items-center flex-column p-4 user-box">
         <h1 class="h1-pos username-h1">{{ username | truncatechars:21 }}</h1>
         <div class="d-flex justify-content-between align-items-center">
-            <div class="default-avatar" id="avatar" data-hover="Upload">
+            <div class="default-avatar" {% if username == user.username %}id="avatar"{% endif %} data-hover="Upload">
                 {% if avatar %}
                     <img {% if username == user.username %}id="avatarImg"{% endif %} src="{{ avatar }}" alt="" height="100px" width="100px">
                 {% endif %}    
