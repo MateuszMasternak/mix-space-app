@@ -28,9 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['mix-space.herokuapp.com', '127.0.0.1:8000']
+ALLOWED_HOSTS = []
 
 #Email authenticate
 AUTH_USER_MODEL = "music.User"
@@ -50,7 +50,7 @@ PASSWORD_RESET_TIMEOUT = 86400
 # Captcha
 RECAPTCHA_PUBLIC_KEY = str(os.getenv('RCAP_PUBLIC'))
 RECAPTCHA_PRIVATE_KEY = str(os.getenv('RCAP_PRIVATE'))
-# SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 # Application definition
 
