@@ -27,6 +27,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 showLikeInfo(form, false, false, false);
             }
         })
+
+        // Delete track
+        deleteForms = document.querySelectorAll('#deleteForm');
+        deleteForms.forEach(form => {
+            const deleteBtn = form.querySelector('#deleteBtn');
+            const trackId = form.querySelector('#trackId').innerHTML;
+            deleteBtn.addEventListener('click', () => deleteTrack(form, trackId));
+        });
     }
     else {
         // Change a like status for the music player
@@ -55,7 +63,8 @@ function redirect(card, trackId, e) {
     const likeBtn = card.querySelector('.bi-heart');
     const likesCount = card.querySelector('#likesCount');
     const heartBox = card.querySelector('#heart');
-    if (likeForm === e.target || unlikeBtn === e.target || likeBtn === e.target || likesCount === e.target || heartBox === e.target) {
+    const deleteBtn = card.querySelector('#deleteBtn');
+    if (likeForm === e.target || unlikeBtn === e.target || likeBtn === e.target || likesCount === e.target || heartBox === e.target || deleteBtn === e.target) {
         pass = 'false';
     }
 
@@ -137,5 +146,18 @@ function like(likeForm, btn, player) {
     .then((response) => response.json())
     .then(() => {
         showLikeInfo(likeForm, btn, true, player);
+    })
+}
+
+function deleteTrack(deleteForm, trackId) {
+    path = `/delete/${trackId}`;
+    formData = new FormData(deleteForm);
+    fetch(path, {
+        method: 'POST',
+        body: formData,
+    })
+    .then((response) => response.json())
+    .then(() => {
+        deleteForm.parentElement.remove();
     })
 }

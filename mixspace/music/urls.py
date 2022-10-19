@@ -17,5 +17,6 @@ urlpatterns = [
     path('music-player/<int:id>', views.player, name='player'),
     path('search', views.search, name='search'),
     path('avatar-upload', views.avatar_upload, name='avatar_upload'),
-    path('activate/<uidb64>/<token>', views.activate, name='activate')
+    path('activate/<uidb64>/<token>', views.activate, name='activate'),
+    path('delete/<int:id>', views.delete, name='delete'),
 ]

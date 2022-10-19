@@ -398,3 +398,14 @@ audio {
     font-size: 1.2em;
     margin-bottom: 0.5em;
 }
+
+#deleteBtn {
+    /* font-weight: bold; */
+    width: 2.9em;
+    font-size: 0.9em;
+}
+
+#deleteBtn:hover {
+    cursor: pointer;
+    color: #0d6efd;
+}
