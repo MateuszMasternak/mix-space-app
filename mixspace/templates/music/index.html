@@ -9,7 +9,7 @@
         <p id="get-current-user" style="display: none;">{{ user.username }}</p>
         {% include 'music/include/messages.html' %}
     {% else %}
-        <h2 class="h1-pos">Don't have account yet? <br> <a id="home-to-register-btn" href="{% url 'sign_up' %}">Sign up!</a></h2>
+        <h2 class="h1-pos">Don't have an account yet? <br> <a id="home-to-register-btn" href="{% url 'sign_up' %}">Sign up</a>!</h2>
         {% include 'music/include/messages.html' %}
     {% endif %}
     <h1 class="h1-pos">Last added tracks.</h1>

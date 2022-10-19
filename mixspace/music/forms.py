@@ -58,7 +58,7 @@ class SignUpForm(UserCreationForm):
 class LogInForm(forms.Form):
     login = forms.CharField(max_length=320, required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
-    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox(attrs={'hl': 'en'}))
 
 
 class UserAvatarForm(forms.ModelForm):
