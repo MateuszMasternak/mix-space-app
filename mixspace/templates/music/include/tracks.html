@@ -2,6 +2,13 @@
     {% for track in page_obj %}
         <article class="card">
             <h2 class="track-title">{{track.title}}</h2>
+            {% if user.is_authenticated and track.artist == user and 'user' in request.path %}
+            <form method="post" action="{% url 'delete' id=track.id %}" id="deleteForm">
+                {% csrf_token %}
+                <p id="trackId" hidden>{{ track.id }}</p>
+                <p id="deleteBtn">Delete</p>
+            </form>
+            {% endif %}
             <div class="card-bottom">
                 <div class="likeFormParent">
                     <form method="post" action="{% url 'like' id=track.id %}" id="likeForm" class="d-flex">

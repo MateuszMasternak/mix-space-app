@@ -195,7 +195,7 @@ def like(request, id):
             track.like.remove(request.user)
         else:
             track.like.add(request.user)
-            
+        
         return JsonResponse({'success': 'Follows are updated successfully.'},
         status=200)
     else:
@@ -292,6 +292,7 @@ def avatar_upload(request):
         form = UserAvatarForm(request.POST, request.FILES)
         if form.is_valid():
             user = User.objects.get(pk=request.user.id)
+            user.avatar.delete()
             user.avatar = form.cleaned_data['avatar']
             user.save()
             
@@ -300,3 +301,12 @@ def avatar_upload(request):
             for error in list(form.errors.values()):
                 messages.error(request, error)
             return redirect(request.META['HTTP_REFERER'])
+        
+        
+@login_required(login_url='/log-in')
+def delete(request, id):
+    if request.method == 'POST':
+        track = Set.objects.get(pk=id)
+        track.delete()
+        return JsonResponse({'success': 'Track is deleted successfully.'},
+        status=200)
