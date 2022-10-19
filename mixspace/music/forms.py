@@ -11,7 +11,7 @@ import string
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True, label='Email')
-    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox(attrs={'hl': 'en'}))
 
     class Meta:
         model = User
