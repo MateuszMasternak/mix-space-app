@@ -30,11 +30,11 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         
-        messages.success(request, '<h3>Email confirmation.</h3></br> \
+        messages.success(request, '<h3 class="email-conf">Email confirmation.</h3></br> \
         <ul class="errorlist"><li>Thank you for \
         your email confirmation. now you can login to your account.</li></ul>')
     else:
-        messages.error(request, '<h3>Email confirmation.</h3></br> \
+        messages.error(request, '<h3 class="email-conf">Email confirmation.</h3></br> \
         <ul class="errorlist"><li>Activation link is \
         invalid.</li></ul>')
     
@@ -58,7 +58,7 @@ def activate_email(request, user, email):
         click on received activation link to confirm and complete the \
         registration. <b>Note:</b> Check your spam folder.</li></ul>')
     else:
-        messages.error(request, f'<h3>Email confirmation.</h3></br> \
+        messages.error(request, f'<h3 class="email-conf">Email confirmation.</h3></br> \
         <ul class="errorlist"><li>Problem sending \
         email to {email}, check if you typed it correctly.</ul>/<li>')
 
