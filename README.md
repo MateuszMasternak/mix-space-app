@@ -1,10 +1,11 @@
 
-# 🎛️mix-space
+# mix-space
 </svg>
 </br>
 </br>
 
 ## 🎥Demo:
+![](https://j.gifs.com/gpELAk.gif)
 </br>
 </br>
 
