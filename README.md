@@ -1,7 +1,5 @@
 
 # mix-space
-</svg>
-</br>
 </br>
 
 ## 🎥Demo:
@@ -15,7 +13,7 @@
 </br>
 
 ## 📄About:
-My project is an audio web app with build in simple audio player. You can there share your own music by uploading it. Others (or you) can listen your music tracks, like them and also follow you, to be up to date with your productions and mixes. It's possible to upload your avatar, which will be visible on your profile page or delete your music tracks from there. The home page is a place when you can see all user's music uploads sorted by date from the newest. The music uploads are displayed as a purple cards with all info about them in those, such as genre, date, uploader, title. There is also an option to give a like, which equals adding the track to your liked tracks list. Besides, you can click at an uploader nickname to be redirected to his profile, or on the track card to be redirected to a music player, where also is the option to give the like. The app show messages after handling log ins, log outs, uploads, or if they aren't successfull, etc. Sign up need an email confirmation before log in will be possible, and you can use the email in that, because of implemented custom user model and authentication. Mix-space also contain a search bar, which can be used to search music by a phrases, which are contained in the titles. At the end, log in and sign up forms include reCAPTCHA by Google. 
+My project is an audio web app with build in simple audio player. You can share there your own music by uploading it. Others (or you) can listen your music tracks, give them likes and also follow you, to be up to date with your productions and mixes. It's possible to upload your avatar, which will be visible on your profile page or delete your music tracks from there. The home page is a place when you can see all user's music uploads sorted by date from the newest. The music uploads are displayed as a purple cards with all info about them in those, such as genre, date, uploader, title. There is also an option to give a like, which equals adding the track to your liked tracks list. Besides, you can click at an uploader nickname to be redirected to his profile, or on the track card to be redirected to a music player, where also is the option to give the like. The app show messages after handling log ins, log outs, uploads, or if they aren't successfull, etc. Sign up need an email confirmation before log in will be possible, and you can use the email in that, because of implemented custom user model and authentication. Mix-space also contain a search bar, which can be used to search music by a phrases, which are contained in the titles. At the end, log in and sign up forms include reCAPTCHA by Google. 
 </br>
 </br>
 
