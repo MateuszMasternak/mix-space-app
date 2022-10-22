@@ -23,7 +23,7 @@ My project is an audio web app with build in simple audio player. You can there 
 * Clone the repository.
 * Download Python 3.\*.\*, the project is wrote in Python 3.10.8.
 > https://www.python.org/downloads/.
-* Create virtual environments:
+* Create virtual environment:
 > https://docs.python.org/3/tutorial/venv.html.
 * Download all dependencies:
 > python -m pip install -r requirements.txt.
