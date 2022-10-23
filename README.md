@@ -13,7 +13,7 @@
 </br>
 
 ## 📄About:
-Mix-space is a music sharing web app, which contain features such as a files upload (audio and images), verification of sign up via email, reCAPTCHA, managing likes, follows, etc.
+Mix-space is a music sharing web app, which contains features such as a files upload (audio and images), verification of sign up via email, reCAPTCHA, managing likes, follows, etc.
 </br>
 </br>
 
