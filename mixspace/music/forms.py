@@ -3,14 +3,14 @@ from django.core.validators import validate_email
 from django.core.files.images import get_image_dimensions
 from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV2Checkbox
-from django.forms import ModelForm
-from django import forms
+from django.forms import Form, ModelForm, ValidationError
+from django.forms import CharField, EmailField, PasswordInput, Select
 from .models import User, Set
 import string
 
 
 class SignUpForm(UserCreationForm):
-    email = forms.EmailField(required=True, label='Email')
+    email = EmailField(required=True, label='Email')
     captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox(attrs={'hl': 'en'}))
 
     class Meta:
@@ -20,16 +20,13 @@ class SignUpForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data["email"]
 
-        try:
-            if User.objects.get(email=email):
-                raise forms.ValidationError("This email is unavailable.")
-        except User.DoesNotExist:
-            pass
+        if User.objects.filter(email=email).count() == 0:
+            raise ValidationError("This email is unavailable.")
 
         try:
             validate_email(email)
         except ValidationError:
-            raise forms.ValidationError("This email is incorrect.")
+            raise ValidationError("This email is incorrect.")
 
         return email
     
@@ -37,31 +34,28 @@ class SignUpForm(UserCreationForm):
         username = self.cleaned_data["username"]
 
         if len(username) < 5:
-            raise forms.ValidationError("This username is too short.")
+            raise ValidationError("This username is too short.")
         elif len(username) > 32:
-            raise forms.ValidationError("This username is too long.")
+            raise ValidationError("This username is too long.")
 
         signs = "".join(string.ascii_letters + string.digits + "_")
         for sign in username:
             if sign not in signs:
-                raise forms.ValidationError('This username contain not allowed signs.')
+                raise ValidationError('This username contain not allowed signs.')
 
-        try:
-            if User.objects.get(username=username):
-                raise forms.ValidationError("This username is is unavailable.")
-        except User.DoesNotExist:
-            pass
+        if User.objects.filter(username=username).count() == 0:
+            raise ValidationError("This username is unavailable.")
 
         return username
 
 
-class LogInForm(forms.Form):
-    login = forms.CharField(max_length=320, required=True)
-    password = forms.CharField(widget=forms.PasswordInput, required=True)
+class LogInForm(Form):
+    login = CharField(max_length=320, required=True)
+    password = CharField(widget=PasswordInput, required=True)
     captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox(attrs={'hl': 'en'}))
 
 
-class UserAvatarForm(forms.ModelForm):
+class UserAvatarForm(ModelForm):
     class Meta:
         model = User
         fields = ('avatar',)
@@ -74,19 +68,19 @@ class UserAvatarForm(forms.ModelForm):
 
             max_width = max_height = 100
             if w > max_width or h > max_height:
-                raise forms.ValidationError(
+                raise ValidationError(
                     u'Please use an image that is '
                     '%s x %s pixels or smaller.' % (max_width, max_height))
 
             main, sub = avatar.content_type.split('/')
             if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'png']):
-                raise forms.ValidationError(u'Please use a JPEG, or PNG image.')
+                raise ValidationError(u'Please use a JPEG, or PNG image.')
 
             if len(avatar) > (10 * 1024):
-                raise forms.ValidationError(
+                raise ValidationError(
                     u'Avatar file size may not exceed 10mb.')
         except AttributeError:
-            pass
+            return None
 
         return avatar
 
@@ -101,15 +95,15 @@ class AddSetForm(ModelForm):
             ("Drum and bass", "Drum and bass"),
         )
         widgets = {
-            "genre": forms.Select(choices=GENRE_CHOICE)
+            "genre": Select(choices=GENRE_CHOICE)
         }
 
     def clean_title(self):
         title = self.cleaned_data["title"]
 
         if len(title) < 4:
-            raise forms.ValidationError("This title is too short.")
+            raise ValidationError("This title is too short.")
         elif len(title) > 32:
-            raise forms.ValidationError("This title is too long.")
+            raise ValidationError("This title is too long.")
 
         return title
