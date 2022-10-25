@@ -20,7 +20,7 @@ class SignUpForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data["email"]
 
-        if User.objects.filter(email=email).count() == 0:
+        if User.objects.filter(email=email).count() != 0:
             raise ValidationError("This email is unavailable.")
 
         try:
@@ -43,7 +43,7 @@ class SignUpForm(UserCreationForm):
             if sign not in signs:
                 raise ValidationError('This username contain not allowed signs.')
 
-        if User.objects.filter(username=username).count() == 0:
+        if User.objects.filter(username=username).count() != 0:
             raise ValidationError("This username is unavailable.")
 
         return username
