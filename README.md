@@ -33,8 +33,9 @@ Mix-space is a music sharing web app, which contains features such as a files up
 * Go to google.com/recaptcha/admin > register reCAPTCHA with v2 "I'm not a robot" Checkbox and 127.0.0.1 domain > fill up .env file with RCAP_PUBLIC (SITE KEY) and RCAP_PRIVATE (SECRET KEY) using generated keys.
 * Fill up SECRET_KEY which is on the top of the mixspace/settings.py or also fill up .env file with that.
 * From the main directory type in the console:
-> python manage.py migrate  
-> python manage.py createsuperuser&nbsp;&nbsp;# then follow instructions  
-> python manage.py runserver  
+> python manage.py migrate   
+> python manage.py runserver
+* You can also create admin acc by:
+> python manage.py createsuperuser&nbsp;&nbsp;# then follow instructions
 </br>
 That's it.
