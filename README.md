@@ -13,13 +13,13 @@
 </br>
 
 ## 📄About:
-Mix-space is a music sharing web app, which contains features such as a files upload (audio and images), verification of sign up via email, reCAPTCHA, managing likes, follows, etc.
+A web app for sharing music that includes features such as creating an account with verification via email, logging in, reCAPTCHA, uploading audio files and images, liking and following.
 </br>
 </br>
 
 ## ⌨️How to run the app locally:
 * Clone the repository.
-* Download Python 3.\*.\*, the project is wrote in Python 3.10.8.
+* Download Python3.
 > https://www.python.org/downloads/.
 * Create virtual environment:
 > https://docs.python.org/3/tutorial/venv.html.
