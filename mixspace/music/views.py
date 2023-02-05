@@ -95,7 +95,6 @@ def sign_up(request):
         })
 
 
-
 def log_in(request):
     if request.method == 'POST':
         form = LogInForm(request.POST)
