@@ -5,14 +5,20 @@ from django.core.validators import MinLengthValidator, FileExtensionValidator
 
 class User(AbstractUser):
     avatar = models.ImageField(upload_to='music/media/avatars', null=True)
-    following = models.ManyToManyField('self', symmetrical=False, related_name='follow')
-    followed = models.ManyToManyField('self', symmetrical=False, related_name='followers')
+    # following = models.ManyToManyField('self', symmetrical=False, related_name='follow')
+    # followed = models.ManyToManyField('self', symmetrical=False, related_name='followers')
 
     def serialize(self):
         return {
             'username': self.username,
             'avatar': self.avatar.path
         }
+
+
+class Follows(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    follower = models.ForeignKey(User, on_delete=models.CASCADE())
+    date_followed = models.DateTimeField(auto_now_add=True)
 
 
 class Set(models.Model):
