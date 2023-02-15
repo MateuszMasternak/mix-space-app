@@ -11,7 +11,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 
 
-from .models import User, Set
+from .models import User, Set, Follows
 from .forms import SignUpForm, LogInForm, AddSetForm, UserAvatarForm
 from .tokens import account_activation_token
 
@@ -224,20 +224,21 @@ def liked(request):
 def follow(request, username):
     if request.method == 'POST':
         user = User.objects.get(username=username)
-        if request.user in user.followed.all():
-            user.followed.remove(request.user)
-            request.user.following.remove(user)
+        follows = Follows.objects.filter(user=user, follower=request.user)
+        if len(follows) == 1:
+            follows[0].remove()
         else:
-            user.followed.add(request.user)
-            request.user.following.add(user)
+            follow_ = Follows(user, request.user)
+            follow_.save()
             
         return JsonResponse({'success': 'Follows are updated successfully.'},
-        status=200)
+                            status=200)
     else:
         user = User.objects.get(username=username)
-        if request.user in user.followed.all():
+        follows = Follows.objects.filter(user=user, follower=request.user)
+        if len(follows) == 1:
             is_followed = True
-        elif user is not request.user:
+        else:
             is_followed = False
         
         data = {
@@ -249,12 +250,23 @@ def follow(request, username):
  
 @login_required(login_url='/log-in')  
 def following(request):
-    followed_users = list(request.user.following.all())
+    # followed_users = list(request.user.following.all())
+    # tracks = Set.objects.filter(artist__in=followed_users).order_by('-time_added')
+    # paginator = Paginator(tracks, 12)
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
+    #
+    # return render(request, 'music/following.html', {
+    #     'page_obj': page_obj
+    # })
+
+    follows = Follows.objects.filter(follower=request.user)
+    followed_users = [follow_.user for follow_ in follows]
     tracks = Set.objects.filter(artist__in=followed_users).order_by('-time_added')
     paginator = Paginator(tracks, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    
+
     return render(request, 'music/following.html', {
         'page_obj': page_obj
     })
