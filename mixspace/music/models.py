@@ -3,16 +3,19 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator, FileExtensionValidator
 
 
-class User(AbstractUser):
-    avatar = models.ImageField(upload_to='music/media/avatars', null=True)
-    following = models.ManyToManyField('self', symmetrical=False, related_name='follow')
-    followed = models.ManyToManyField('self', symmetrical=False, related_name='followers')
-
-    def serialize(self):
-        return {
-            'username': self.username,
-            'avatar': self.avatar.path
-        }
+class CustomAbstractUser(AbstractUser):
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True,
+    )
+    avatar = models.ImageField(
+        upload_to="media/core/avatars",
+        null=True
+    )
+    is_active = models.BooleanField(
+        default=False
+    )
 
 
 class Set(models.Model):
