@@ -5,7 +5,7 @@ from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV2Checkbox
 from django.forms import Form, ModelForm, ValidationError
 from django.forms import CharField, EmailField, PasswordInput, Select
-from .models import User, Set
+from .models import CustomAbstractUser as User, Track
 import string
 
 
@@ -87,7 +87,7 @@ class UserAvatarForm(ModelForm):
 
 class AddSetForm(ModelForm):
     class Meta:
-        model = Set
+        model = Track
         fields = ("title", "genre", "file")
         GENRE_CHOICE = (
             ("", "Select genre"),
