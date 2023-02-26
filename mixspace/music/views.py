@@ -10,8 +10,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 
-
-from .models import CustomAbstractUser as User
+from .models import CustomAbstractUser as User, Follow, Track, Like
 from .forms import SignUpForm, LogInForm, AddSetForm, UserAvatarForm
 from .tokens import account_activation_token
 
@@ -64,7 +63,7 @@ def activate_email(request, user, email):
 
 
 def index(request):
-    all_tracks = Set.objects.all().order_by('-time_added')
+    all_tracks = Track.objects.all().order_by('-time_added')
     paginator = Paginator(all_tracks, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -165,7 +164,7 @@ def show_user(request, username):
     else:
         logged_in = False
         
-    user_tracks = Set.objects.filter(artist=user).order_by('-time_added')
+    user_tracks = Track.objects.filter(artist=user).order_by('-time_added')
     paginator = Paginator(user_tracks, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
