@@ -11,7 +11,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 
 
-from .models import User, Set
+from .models import CustomAbstractUser as User
 from .forms import SignUpForm, LogInForm, AddSetForm, UserAvatarForm
 from .tokens import account_activation_token
 
@@ -102,7 +102,7 @@ def log_in(request):
             login_ = form.cleaned_data.get('login')
             password = form.cleaned_data.get('password')
 
-            user = authenticate(username=login_, password=password)
+            user = authenticate(email=login_, password=password)
             if user is not None:
                 login(request, user)
                 messages.success(request, '<ul class="errorlist"><li>Logged in \
@@ -125,7 +125,6 @@ def log_in(request):
         return render(request, 'music/log_in.html', {
             'form': form
         })
-    
 
 
 @login_required(login_url='/log-in')

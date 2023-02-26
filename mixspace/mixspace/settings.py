@@ -33,7 +33,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Email authenticate
-AUTH_USER_MODEL = "music.User"
+AUTH_USER_MODEL = "music.CustomAbstractUser"
 AUTHENTICATION_BACKENDS = ["music.backend.CustomUserModelBackend"]
 
 # Email settings

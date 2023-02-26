@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 
-from .models import CustomAbstractUser
+from .models import CustomAbstractUser as User
 
 
 class CustomUserModelBackend(ModelBackend):
@@ -22,7 +22,7 @@ class CustomUserModelBackend(ModelBackend):
             )
         except UserModel.DoesNotExist:
             # https://code.djangoproject.com/ticket/20760
-            CustomAbstractUser().set_password(password)
+            User().set_password(password)
         else:
             if user.check_password(password) and self.user_can_authenticate(user):
                 return user
