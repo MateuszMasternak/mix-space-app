@@ -196,14 +196,18 @@ def like(request, pk):
             like_ = Like(track=track, user=request.user)
             like_.save()
         
-        return JsonResponse({'success': 'Follows are updated successfully.'},
-                            status=200)
+        return JsonResponse(
+            {'success': 'Follows are updated successfully.'},
+            status=200
+        )
     else:
         try:
             track = Track.objects.get(pk=pk)
         except Track.DoesNotExist:
-            return JsonResponse({'error': 'Track not exist.'},
-                                status=404)
+            return JsonResponse(
+                {'error': 'Track doesn\'t exist.'},
+                status=404
+            )
         likes_count = Like.objects.filter(track=track).count()
         data = {
             'likes_count': likes_count,
@@ -229,21 +233,45 @@ def liked(request):
 @login_required(login_url='/log-in')
 def follow(request, username):
     if request.method == 'POST':
-        user = User.objects.get(username=username)
-        if request.user in user.followed.all():
-            user.followed.remove(request.user)
-            request.user.following.remove(user)
-        else:
-            user.followed.add(request.user)
-            request.user.following.add(user)
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return JsonResponse(
+                {'error': 'User doesn\'t exist'},
+                status=404
+            )
+
+        try:
+            follow_ = Follow.objects.get(user=user, follower=request.user)
+            follow_.delete()
+        except Follow.DoesNotExist:
+            follow_ = Follow(user=user, follower=request.user)
+            follow_.save()
             
-        return JsonResponse({'success': 'Follows are updated successfully.'},
-        status=200)
+        return JsonResponse(
+            {'success': 'Follows are updated successfully.'},
+            status=200
+        )
     else:
-        user = User.objects.get(username=username)
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return JsonResponse(
+                {'error': 'User doesn\'t exist'},
+                status=404
+            )
         if request.user in user.followed.all():
             is_followed = True
         elif user is not request.user:
+            is_followed = False
+
+        try:
+            follow_ = Follow.objects.get(
+                username=username,
+                follower=request.user
+            )
+            is_followed = True
+        except Follow.DoesNotExist:
             is_followed = False
         
         data = {
@@ -255,8 +283,9 @@ def follow(request, username):
  
 @login_required(login_url='/log-in')  
 def following(request):
-    followed_users = list(request.user.following.all())
-    tracks = Set.objects.filter(artist__in=followed_users).order_by('-time_added')
+    follows = Follow.objects.filter(user=request.user)
+    tracks = Track.objects.filter(follow__in=follows).order_by('-time_added')
+
     paginator = Paginator(tracks, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
