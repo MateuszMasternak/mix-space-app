@@ -185,19 +185,22 @@ def show_user(request, username):
     })
 
 
-def like(request, id):
+def like(request, pk):
     if request.method == 'POST':
-        track = Set.objects.get(id=id)
-        if request.user in track.like.all():
-            track.like.remove(request.user)
-        else:
-            track.like.add(request.user)
+        track = Track.objects.get(pk=pk)
+
+        try:
+            like_ = Like.objects.get(track=track, user=request.user)
+            like_.delete()
+        except Like.DoesNotExist:
+            like_ = Like(track=track, user=request.user)
+            like_.save()
         
         return JsonResponse({'success': 'Follows are updated successfully.'},
-        status=200)
+                            status=200)
     else:
-        track = Set.objects.get(id=id)
-        likes_count = track.like.count()
+        track = Track.objects.filter(pk=pk)
+        likes_count = Like.objects.filter(track=track).count()
         data = {
             'likes_count': likes_count,
         }
@@ -207,7 +210,8 @@ def like(request, id):
 
 @login_required(login_url='/log-in')
 def liked(request):
-    tracks = Set.objects.filter(like=request.user).order_by('-time_added')
+    likes = Like.objects.filter(user=request.user)
+    tracks = Track.objects.filter(like__in=like)
     
     paginator = Paginator(tracks, 12)
     page_number = request.GET.get('page')
