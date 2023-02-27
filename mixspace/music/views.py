@@ -345,9 +345,16 @@ def avatar_upload(request):
         
         
 @login_required(login_url='/log-in')
-def delete(request, id):
+def delete(request, pk):
     if request.method == 'POST':
-        track = Set.objects.get(pk=id)
-        track.delete()
+        try:
+            track = Track.objects.get(pk=pk
+            track.delete()
+        except Track.DoesNotExist:
+            return JsonResponse(
+                {'error': 'Track doesn\'t exist'},
+                status=404
+            )
+
         return JsonResponse({'success': 'Track is deleted successfully.'},
         status=200)
