@@ -348,7 +348,7 @@ def avatar_upload(request):
 def delete(request, pk):
     if request.method == 'POST':
         try:
-            track = Track.objects.get(pk=pk
+            track = Track.objects.get(pk=pk)
             track.delete()
         except Track.DoesNotExist:
             return JsonResponse(
