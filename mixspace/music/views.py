@@ -219,7 +219,7 @@ def like(request, pk):
 @login_required(login_url='/log-in')
 def liked(request):
     likes = Like.objects.filter(user=request.user)
-    tracks = Track.objects.filter(like__in=like)
+    tracks = Track.objects.filter(id__in=likes.values('track_id'))
     
     paginator = Paginator(tracks, 12)
     page_number = request.GET.get('page')
@@ -285,7 +285,9 @@ def follow(request, username):
 def following(request):
     follows = Follow.objects.filter(user=request.user)
     users = User.objects.filter(id__in=follows.values('user_id'))
-    tracks = Track.objects.filter(id__in=users.values('id')).order_by('-time_added')
+    tracks = Track.objects.filter(
+        id__in=users.values('id')
+    ).order_by('-time_added')
 
     paginator = Paginator(tracks, 12)
     page_number = request.GET.get('page')
