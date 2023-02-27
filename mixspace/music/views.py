@@ -295,8 +295,15 @@ def following(request):
     })
     
 
-def player(request, id):
-    track = Set.objects.get(id=id)
+def player(request, pk):
+    try:
+        track = Track.objects.get(pk=pk)
+    except Track.DoesNotExist:
+        return JsonResponse(
+            {'error': 'User doesn\'t exist'},
+            status=404
+        )
+
     return render(request, 'music/player.html', {
         'track': track,
     })
@@ -305,7 +312,7 @@ def player(request, id):
 def search(request):
     if request.method == 'POST':
         q = request.POST['search']
-        tracks = Set.objects.filter(title__icontains=q).order_by('-title')
+        tracks = Track.objects.filter(title__icontains=q).order_by('-title')
         if tracks.count() < 1:
             empty = True
         else:
