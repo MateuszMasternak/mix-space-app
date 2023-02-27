@@ -360,4 +360,4 @@ def delete(request, pk):
             )
 
         return JsonResponse({'success': 'Track is deleted successfully.'},
-        status=200)
+                            status=200)
