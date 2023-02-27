@@ -199,7 +199,11 @@ def like(request, pk):
         return JsonResponse({'success': 'Follows are updated successfully.'},
                             status=200)
     else:
-        track = Track.objects.filter(pk=pk)
+        try:
+            track = Track.objects.get(pk=pk)
+        except Track.DoesNotExist:
+            return JsonResponse({'error': 'Track not exist.'},
+                                status=404)
         likes_count = Like.objects.filter(track=track).count()
         data = {
             'likes_count': likes_count,
