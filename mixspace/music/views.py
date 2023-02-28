@@ -77,9 +77,7 @@ def sign_up(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():            
-            user = form.save(commit=False)
-            user.is_active = False
-            form.save()
+            user = form.save()
 
             activate_email(request, user, form.cleaned_data.get('email'))
             return redirect('log_in')
