@@ -16,7 +16,7 @@ function showFollowButton(followForm) {
         if (btn) {
             btn.remove();
         }
-        button = document.createElement('button');
+        let button = document.createElement('button');
         if (data['is_followed'] === true) {
             button.classList.add('btn', 'btn-outline-danger', 'unfollowButton');
             button.textContent = 'Unfollow';

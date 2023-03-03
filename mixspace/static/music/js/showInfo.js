@@ -1,16 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
-    username  = document.querySelector('.su-nick-input');
+    let username  = document.querySelector('.su-nick-input');
     if (username) {
         username.addEventListener('focus', () => show('username-form-text'))
         username.addEventListener('blur', () => hide('username-form-text'))
     }
-    password  = document.querySelector('.su-pass-input');
+    let password  = document.querySelector('.su-pass-input');
     if (password) {
         password.addEventListener('focus', () => show('password-form-text'))
         password.addEventListener('blur', () => hide('password-form-text'))
     }
 
-    title  = document.querySelector('.u-title-input');
+    let title  = document.querySelector('.u-title-input');
     if (title) {
         title.addEventListener('focus', () => show('title-form-text'))
         title.addEventListener('blur', () => hide('title-form-text'))
