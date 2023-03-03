@@ -305,10 +305,9 @@ def player(request, pk):
     try:
         track = Track.objects.get(pk=pk)
     except Track.DoesNotExist:
-        return JsonResponse(
-            {'error': 'User doesn\'t exist'},
-            status=404
-        )
+        return render(request, 'music/player.html', {
+            'error': 'Track doesn\'t exist.'
+        })
 
     return render(request, 'music/player.html', {
         'track': track,
