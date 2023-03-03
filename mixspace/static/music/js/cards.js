@@ -3,14 +3,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const pathArray = window.location.pathname.split('/');
     if (pathArray[1] !== 'music-player') {
         // Click on a track's card will redirect to the player
-        cards = document.querySelectorAll('.card');
+        let cards = document.querySelectorAll('.card');
         cards.forEach(card => {
             const trackId = card.querySelector('#trackId').innerHTML;
             card.addEventListener('click', (e) => redirect(card, trackId, e));
         });
 
         // Click on a heart icon or a likes count will change a like status
-        likeForms = document.querySelectorAll('#likeForm');
+        let likeForms = document.querySelectorAll('#likeForm');
         likeForms.forEach(form => {
             const likeBtn = form.querySelector('#likeButton');
             const unlikeBtn = form.querySelector('#unlikeButton');
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
 
         // Delete track
-        deleteForms = document.querySelectorAll('#deleteForm');
+        let deleteForms = document.querySelectorAll('#deleteForm');
         deleteForms.forEach(form => {
             const deleteBtn = form.querySelector('#deleteBtn');
             const trackId = form.querySelector('#trackId').innerHTML;
@@ -74,8 +74,8 @@ function redirect(card, trackId, e) {
 }
 
 function showLikeInfo(likeForm, btn, update, player) {
-    trackId = likeForm.querySelector('#trackId').innerHTML;
-    path = `/like/${trackId}`;
+    const trackId = likeForm.querySelector('#trackId').innerHTML;
+    const path = `/like/${trackId}`;
     fetch(path)
     .then((response) => response.json())
     .then((data) => {
@@ -136,8 +136,8 @@ function showLikeInfo(likeForm, btn, update, player) {
 }
 
 function like(likeForm, btn, player) {
-    trackId = likeForm.querySelector('#trackId').innerHTML;
-    path = `/like/${trackId}`;
+    const trackId = likeForm.querySelector('#trackId').innerHTML;
+    const path = `/like/${trackId}`;
     formData = new FormData(likeForm);
     fetch(path, {
         method: 'POST',
@@ -150,7 +150,7 @@ function like(likeForm, btn, player) {
 }
 
 function deleteTrack(deleteForm, trackId) {
-    path = `/delete/${trackId}`;
+    const path = `/delete/${trackId}`;
     formData = new FormData(deleteForm);
     fetch(path, {
         method: 'POST',

@@ -15,27 +15,27 @@ from .forms import SignUpForm, LogInForm, AddSetForm, UserAvatarForm
 from .tokens import account_activation_token
 
 from datetime import datetime
-from itertools import chain
 
 
 def activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
-    except:
+    except User.DoesNotExist:
         user = None
         
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
         
-        messages.success(request, '<h3 class="email-conf">Email confirmation.</h3></br> \
-        <ul class="errorlist"><li>Thank you for \
-        your email confirmation. now you can login to your account.</li></ul>')
+        messages.success(request, '<h3 class="email-conf">Email confirmation.'
+                                  '</h3></br><ul class="errorlist"><li>Thank '
+                                  'you for your email confirmation. now you can'
+                                  ' login to your account.</li></ul>')
     else:
-        messages.error(request, '<h3 class="email-conf">Email confirmation.</h3></br> \
-        <ul class="errorlist"><li>Activation link is \
-        invalid.</li></ul>')
+        messages.error(request, '<h3 class="email-conf">Email confirmation.'
+                                '</h3></br><ul class="errorlist"><li>Activation'
+                                ' link is invalid.</li></ul>')
     
     return redirect('log_in')
 
@@ -51,15 +51,18 @@ def activate_email(request, user, email):
     })
     email = EmailMessage(mail_subject, message, to=[email])
     if email.send():
-        messages.success(request, f'<h3 class="email-conf">Email confirmation.</h3></br> \
-        <ul class="errorlist"><li>Dear \
-        <b>{user}</b>, please go to your email <b>{email}</b> inbox and  \
-        click on received activation link to confirm and complete the \
-        registration. <b>Note:</b> Check your spam folder.</li></ul>')
+        messages.success(request, f'<h3 class="email-conf">Email confirmation.'
+                                  f'</h3></br><ul class="errorlist"><li>Dear<b'
+                                  f'>{user}</b>, please go to your email <b>'
+                                  f'{email}</b> inbox and click on received '
+                                  f'activation link to confirm and complete the'
+                                  f' registration. <b>Note:</b> Check your spam'
+                                  f' folder.</li></ul>')
     else:
-        messages.error(request, f'<h3 class="email-conf">Email confirmation.</h3></br> \
-        <ul class="errorlist"><li>Problem sending \
-        email to {email}, check if you typed it correctly.</ul>/<li>')
+        messages.error(request, f'<h3 class="email-conf">Email confirmation.'
+                                f'</h3></br><ul class="errorlist"><li>Problem '
+                                f'sending email to {email}, check if you typed'
+                                f' it correctly.</ul>/<li>')
 
 
 def index(request):
@@ -102,18 +105,18 @@ def log_in(request):
             user = authenticate(email=login_, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, '<ul class="errorlist"><li>Logged in \
-                successfully.</li></ul>')
+                messages.success(request, '<ul class="errorlist"><li>Logged in '
+                                          'successfully.</li></ul>')
                 return redirect('index')
             else:
-                messages.error(request, '<ul class="errorlist"><li>Invalid \
-                login and/or password.</li></ul>')
+                messages.error(request, '<ul class="errorlist"><li>Invalid '
+                                        'login and/or password.</li></ul>')
                 return redirect('log_in')
         else:
             for key, error in list(form.errors.items()):
                 if key == 'captcha' and error[0] == 'This field is required.':
-                    messages.error(request, '<ul class="errorlist"><li>You must \
-                    pass the reCAPTCHA.</li></ul>')
+                    messages.error(request, '<ul class="errorlist"><li>You must'
+                                            ' pass the reCAPTCHA.</li></ul>')
                     continue
                 messages.error(request, error)
             return redirect('log_in')
@@ -128,8 +131,8 @@ def log_in(request):
 def log_out(request):
     logout(request)
 
-    messages.success(request, '<ul class="errorlist"><li>Logged out \
-    successfully.</li></ul>')
+    messages.success(request, '<ul class="errorlist"><li>Logged out '
+                              'successfully.</li></ul>')
     return redirect('index')
 
 
@@ -300,10 +303,9 @@ def player(request, pk):
     try:
         track = Track.objects.get(pk=pk)
     except Track.DoesNotExist:
-        return JsonResponse(
-            {'error': 'User doesn\'t exist'},
-            status=404
-        )
+        return render(request, 'music/player.html', {
+            'error': 'Track doesn\'t exist.'
+        })
 
     return render(request, 'music/player.html', {
         'track': track,
