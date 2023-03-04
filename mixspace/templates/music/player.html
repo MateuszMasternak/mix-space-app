@@ -31,7 +31,7 @@
                 {% endif %}
             </div>
             {% if track %}
-                <form method="post" action="{% url 'like' id=track.id %}" id="likeForm-player" class="d-flex">
+                <form method="post" action="{% url 'like' pk=track.id %}" id="likeForm-player" class="d-flex">
                     {% csrf_token %}
                     <p id="trackId" hidden>{{ track.id }}</p>
                     <div id="heart">
