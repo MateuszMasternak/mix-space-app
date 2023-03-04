@@ -11,7 +11,7 @@ class CustomAbstractUser(AbstractUser):
         unique=True,
     )
     avatar = models.ImageField(
-        upload_to="media/core/avatars",
+        upload_to='media/core/avatars',
         null=True
     )
     is_active = models.BooleanField(
@@ -23,12 +23,12 @@ class Follow(models.Model):
     user = models.ForeignKey(
         AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="following"
+        related_name='following'
     )
     follower = models.ForeignKey(
         AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="follower"
+        related_name='follower'
     )
 
 
@@ -36,7 +36,7 @@ class Track(models.Model):
     artist = models.ForeignKey(
         AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="artist"
+        related_name='artist'
     )
     title = models.CharField(
         max_length=32,
@@ -49,20 +49,20 @@ class Track(models.Model):
         auto_now_add=True
     )
     file = models.FileField(
-        upload_to="media/core/audio",
+        upload_to='media/core/audio',
         validators=[
-            FileExtensionValidator(allowed_extensions=["wav"])
+            FileExtensionValidator(allowed_extensions=['wav'])
         ]
     )
 
 
 class Like(models.Model):
     track = models.ForeignKey(
-        "Track",
+        'Track',
         on_delete=models.CASCADE
     )
     user = models.ForeignKey(
         AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="liker"
+        related_name='liker'
     )

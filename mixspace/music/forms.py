@@ -18,33 +18,33 @@ class SignUpForm(UserCreationForm):
         fields = ('email', 'username', 'password1', 'password2', 'captcha')
 
     def clean_email(self):
-        email = self.cleaned_data["email"]
+        email = self.cleaned_data['email']
 
         if User.objects.filter(email=email).count() != 0:
-            raise ValidationError("This email is unavailable.")
+            raise ValidationError('This email is unavailable.')
 
         try:
             validate_email(email)
         except ValidationError:
-            raise ValidationError("This email is incorrect.")
+            raise ValidationError('This email is incorrect.')
 
         return email
     
     def clean_username(self):
-        username = self.cleaned_data["username"]
+        username = self.cleaned_data['username']
 
         if len(username) < 5:
-            raise ValidationError("This username is too short.")
+            raise ValidationError('This username is too short.')
         elif len(username) > 32:
-            raise ValidationError("This username is too long.")
+            raise ValidationError('This username is too long.')
 
-        signs = "".join(string.ascii_letters + string.digits + "_")
+        signs = ''.join(string.ascii_letters + string.digits + '_')
         for sign in username:
             if sign not in signs:
                 raise ValidationError('This username contain not allowed signs.')
 
         if User.objects.filter(username=username).count() != 0:
-            raise ValidationError("This username is unavailable.")
+            raise ValidationError('This username is unavailable.')
 
         return username
 
@@ -88,22 +88,24 @@ class UserAvatarForm(ModelForm):
 class AddSetForm(ModelForm):
     class Meta:
         model = Track
-        fields = ("title", "genre", "file")
+        fields = ('title', 'genre', 'file')
         GENRE_CHOICE = (
-            ("", "Select genre"),
-            ("Techno", "Techno"),
-            ("Drum and bass", "Drum and bass"),
+            ('', 'Select genre'),
+            ('Techno', 'Techno'),
+            ('Drum and bass', 'Drum and bass'),
+            ('Jungle', 'Jungle'),
+            ('House', 'House'),
         )
         widgets = {
             "genre": Select(choices=GENRE_CHOICE)
         }
 
     def clean_title(self):
-        title = self.cleaned_data["title"]
+        title = self.cleaned_data['title']
 
         if len(title) < 4:
-            raise ValidationError("This title is too short.")
+            raise ValidationError('This title is too short.')
         elif len(title) > 32:
-            raise ValidationError("This title is too long.")
+            raise ValidationError('This title is too long.')
 
         return title
