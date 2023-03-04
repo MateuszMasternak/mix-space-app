@@ -85,8 +85,12 @@ def sign_up(request):
             activate_email(request, user, form.cleaned_data.get('email'))
             return redirect('log_in')
         else:
-            for error in list(form.errors.values()):
-                messages.error(request, error)
+            for key, error in list(form.errors.items()):
+                if key == 'captcha' and error[0] == 'This field is required.':
+                    messages.error(request, '<ul class="errorlist"><li>You must'
+                                            ' pass the reCAPTCHA.</li></ul>')
+                else:
+                    messages.error(request, error)
             return redirect('sign_up')
     else:
         form = SignUpForm
@@ -117,8 +121,8 @@ def log_in(request):
                 if key == 'captcha' and error[0] == 'This field is required.':
                     messages.error(request, '<ul class="errorlist"><li>You must'
                                             ' pass the reCAPTCHA.</li></ul>')
-                    continue
-                messages.error(request, error)
+                else:
+                    messages.error(request, error)
             return redirect('log_in')
     else:
         form = LogInForm
@@ -210,8 +214,16 @@ def like(request, pk):
                 status=404
             )
         likes_count = Like.objects.filter(track=track).count()
+
+        try:
+            like_ = Like.objects.get(track=track, user=request.user)
+            is_liked = True
+        except Like.DoesNotExist:
+            is_liked = False
+
         data = {
             'likes_count': likes_count,
+            'is_liked': is_liked
         }
         
         return JsonResponse(data)
@@ -261,10 +273,6 @@ def follow(request, username):
                 {'error': 'User doesn\'t exist'},
                 status=404
             )
-        if request.user in user.followed.all():
-            is_followed = True
-        elif user is not request.user:
-            is_followed = False
 
         try:
             follow_ = Follow.objects.get(
