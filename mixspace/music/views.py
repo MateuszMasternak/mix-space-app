@@ -147,7 +147,6 @@ def upload(request):
         if form.is_valid():
             new_set = form.save(commit=False)
             new_set.artist = User.objects.get(username=request.user.username)
-            new_set.time_added = datetime.now()
             new_set.save()
 
             return redirect('index')
