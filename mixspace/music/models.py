@@ -49,7 +49,7 @@ class Track(models.Model):
         auto_now_add=True
     )
     file = models.FileField(
-        upload_to='media/core/audio',
+        upload_to='music/audio',
         validators=[
             FileExtensionValidator(allowed_extensions=['wav'])
         ]
