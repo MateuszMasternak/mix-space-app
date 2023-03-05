@@ -13,8 +13,7 @@ from django.core.mail import EmailMessage
 from .models import CustomAbstractUser as User, Follow, Track, Like
 from .forms import SignUpForm, LogInForm, AddSetForm, UserAvatarForm
 from .tokens import account_activation_token
-
-from datetime import datetime
+from .convert_audio import convert_to_mp3
 
 
 def activate(request, uidb64, token):
@@ -146,7 +145,9 @@ def upload(request):
         form = AddSetForm(request.POST, request.FILES)
         if form.is_valid():
             new_set = form.save(commit=False)
-            new_set.artist = User.objects.get(username=request.user.username)
+            new_set.artist = request.user
+            new_set.file = convert_to_mp3(request.FILES.get('file'))
+
             new_set.save()
 
             return redirect('index')
@@ -275,7 +276,7 @@ def follow(request, username):
 
         try:
             follow_ = Follow.objects.get(
-                username=username,
+                user=user,
                 follower=request.user
             )
             is_followed = True
