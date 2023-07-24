@@ -1,0 +1,5 @@
+venv
+.gitignore
+.git
+tests
+pytest.ini
