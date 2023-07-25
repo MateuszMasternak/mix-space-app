@@ -130,6 +130,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Always use TemporaryFileUploadHandler
+
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler'
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
