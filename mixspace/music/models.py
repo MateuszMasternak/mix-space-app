@@ -15,7 +15,7 @@ class CustomAbstractUser(AbstractUser):
         null=True
     )
     is_active = models.BooleanField(
-        default=False
+        default=True
     )
 
 
