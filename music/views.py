@@ -228,7 +228,7 @@ def like(request, pk):
         likes_count = Like.objects.filter(track=track).count()
 
         try:
-            like_ = Like.objects.get(track=track, user=request.user)
+            Like.objects.get(track=track, user=request.user)
             is_liked = True
         except Like.DoesNotExist:
             is_liked = False
@@ -287,7 +287,7 @@ def follow(request, username):
             )
 
         try:
-            follow_ = Follow.objects.get(
+            Follow.objects.get(
                 user=user,
                 follower=request.user
             )

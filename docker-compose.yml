@@ -19,7 +19,7 @@ services:
     volumes:
       - ./app/:/usr/src/app/
     env_file:
-      - ./.env
+      - .env
     links:
       - db
     depends_on:
