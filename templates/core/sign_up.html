@@ -1,4 +1,4 @@
-{% extends 'music/layout.html' %}
+{% extends 'core/layout.html' %}
 {% load static %}
 {% load widget_tweaks %}
 
@@ -6,7 +6,7 @@
 
 {% block body %}
     <h1 class="h1-pos">Sign up.</h1>
-    {% include 'music/include/messages.html' %}
+    {% include 'core/include/messages.html' %}
 
     <form method="post" action="{% url 'sign_up' %}" class="d-flex align-items-center flex-column p-4" id="sign-up-form" autocomplete="off">
         {% csrf_token %}
@@ -47,5 +47,5 @@
 
         <button type="submit" class="btn btn-outline-primary submit sign-up-btn captcha" name="signUp">Sign up</button>
     </form>
-    <script src="{% static 'music/js/showInfo.js' %}"></script>
+    <script src="{% static 'core/js/showInfo.js' %}"></script>
 {% endblock %}

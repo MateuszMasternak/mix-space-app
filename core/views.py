@@ -43,7 +43,7 @@ def activate(request, uidb64, token):
 
 def activate_email(request, user, email):
     mail_subject = 'Activate mix-space\'s user account.'
-    message = render_to_string('music/messages/activate_mess.html', {
+    message = render_to_string('core/messages/activate_mess.html', {
         'user': user.username,
         'domain': get_current_site(request).domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -72,7 +72,7 @@ def index(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'music/index.html', {
+    return render(request, 'core/index.html', {
         'page_obj': page_obj
     })
 
@@ -105,7 +105,7 @@ def sign_up(request):
             return redirect('sign_up')
     else:
         form = SignUpForm
-        return render(request, 'music/sign_up.html', {
+        return render(request, 'core/sign_up.html', {
             'form': form
         })
 
@@ -137,7 +137,7 @@ def log_in(request):
             return redirect('log_in')
     else:
         form = LogInForm
-        return render(request, 'music/log_in.html', {
+        return render(request, 'core/log_in.html', {
             'form': form
         })
 
@@ -169,7 +169,7 @@ def upload(request):
             return redirect('upload')
     else:
         form = AddSetForm()
-        return render(request, 'music/upload.html', {
+        return render(request, 'core/upload.html', {
             'form': form
         })
 
@@ -193,7 +193,7 @@ def show_user(request, username):
     except ValueError:
         avatar = False
 
-    return render(request, 'music/user_profile.html', {
+    return render(request, 'core/user_profile.html', {
         'username': user.username,
         'avatar': avatar,
         'logged_in': logged_in,
@@ -250,7 +250,7 @@ def liked(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'music/liked.html', {
+    return render(request, 'core/liked.html', {
         'page_obj': page_obj
     })
 
@@ -314,7 +314,7 @@ def following(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'music/following.html', {
+    return render(request, 'core/following.html', {
         'page_obj': page_obj
     })
 
@@ -323,11 +323,11 @@ def player(request, pk):
     try:
         track = Track.objects.get(pk=pk)
     except Track.DoesNotExist:
-        return render(request, 'music/player.html', {
+        return render(request, 'core/player.html', {
             'error': 'Track doesn\'t exist.'
         })
 
-    return render(request, 'music/player.html', {
+    return render(request, 'core/player.html', {
         'track': track,
     })
 
@@ -344,7 +344,7 @@ def search(request):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
-        return render(request, 'music/search.html', {
+        return render(request, 'core/search.html', {
             'page_obj': page_obj,
             'empty': empty
         })

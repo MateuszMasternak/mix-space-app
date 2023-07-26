@@ -1,4 +1,4 @@
-{% extends 'music/layout.html' %}
+{% extends 'core/layout.html' %}
 {% load static %}
 {% load widget_tweaks %}
 
@@ -21,7 +21,7 @@
                 <div id="fakeFollowForm"></div>
             {% endif %}
         </div>
-        {% include 'music/include/messages.html' %}
+        {% include 'core/include/messages.html' %}
         {% if user.is_authenticated and user.username == username %}
             <form method="post" action="{% url 'avatar_upload' %}" enctype="multipart/form-data" id="avatarForm">
                 {% csrf_token %}
@@ -38,13 +38,13 @@
         {% endif %}
     </div>
 
-    {% include 'music/include/tracks.html' %}
+    {% include 'core/include/tracks.html' %}
 
-    {% include 'music/include/pagination.html' %}
+    {% include 'core/include/pagination.html' %}
     
     {% if username != user.username %}
-        <script src="{% static 'music/js/userProfile.js' %}"></script>
+        <script src="{% static 'core/js/userProfile.js' %}"></script>
     {% endif %}
-    <script src="{% static 'music/js/cards.js' %}"></script>
-    <script src="{% static 'music/js/showForm.js' %}"></script>
+    <script src="{% static 'core/js/cards.js' %}"></script>
+    <script src="{% static 'core/js/showForm.js' %}"></script>
 {% endblock %}

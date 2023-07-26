@@ -33,8 +33,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Email authenticate
-AUTH_USER_MODEL = "music.CustomAbstractUser"
-AUTHENTICATION_BACKENDS = ["music.backend.CustomUserModelBackend"]
+AUTH_USER_MODEL = "core.CustomAbstractUser"
+AUTHENTICATION_BACKENDS = ["core.backend.CustomUserModelBackend"]
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'music',
+    'core',
     'widget_tweaks',
     'captcha',
 ]
@@ -161,7 +161,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates/music'),
+    os.path.join(BASE_DIR, 'templates/core'),
 )
 
 # Default primary key field type
