@@ -12,7 +12,8 @@ class CustomAbstractUser(AbstractUser):
     )
     avatar = models.ImageField(
         upload_to='media/core/avatars',
-        null=True
+        null=True,
+        blank=True
     )
     is_active = models.BooleanField(
         default=True

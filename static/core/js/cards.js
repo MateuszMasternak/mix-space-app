@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     const pathArray = window.location.pathname.split('/');
-    if (pathArray[1] !== 'core-player') {
+    if (pathArray[1] !== 'music-player') {
         // Click on a track's card will redirect to the player
         const cards = document.querySelectorAll('.card');
         cards.forEach(card => {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     else {
-        // Change a like status for the core player
+        // Change a like status for the music player
         const likeForm = document.querySelector('#likeForm-player');
         const unspecifiedLikeBtn = likeForm.querySelector('#unspecifiedLikeButton');
         const unactiveBtn = likeForm.querySelector('#unactiveLikeButton');

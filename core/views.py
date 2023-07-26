@@ -191,7 +191,7 @@ def show_user(request, username):
     try:
         avatar = user.avatar.url
     except ValueError:
-        avatar = False
+        avatar = None
 
     return render(request, 'core/user_profile.html', {
         'username': user.username,
