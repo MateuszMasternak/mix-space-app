@@ -304,10 +304,10 @@ def follow(request, username):
 
 @login_required(login_url='/log-in')
 def following(request):
-    follows = Follow.objects.filter(user=request.user)
+    follows = Follow.objects.filter(follower=request.user)
     users = User.objects.filter(id__in=follows.values('user_id'))
     tracks = Track.objects.filter(
-        id__in=users.values('id')
+        artist_id__in=users.values('id')
     ).order_by('-time_added')
 
     paginator = Paginator(tracks, 12)
