@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const image = document.querySelector('#avatar');
     if (avatarForm) {
         image.addEventListener('click', function() {
-            if (avatarForm.style.display === 'none') {
+            if (avatarForm.style.display !== 'block') {
                 avatarForm.style.display = 'block';
             }
             else {

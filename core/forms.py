@@ -1,3 +1,5 @@
+import os.path
+
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import validate_email
 from django.core.files.images import get_image_dimensions
@@ -73,16 +75,17 @@ class UserAvatarForm(ModelForm):
                     '%s x %s pixels or smaller.' % (max_width, max_height))
 
             main, sub = avatar.content_type.split('/')
+
             if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'png']):
                 raise ValidationError(u'Please use a JPEG, or PNG image.')
 
-            if len(avatar) > (10 * 1024):
+            if os.path.getsize(avatar.path) > (10 * 1024):
                 raise ValidationError(
                     u'Avatar file size may not exceed 10mb.')
+
+            return avatar
         except AttributeError:
             return None
-
-        return avatar
 
 
 class AddSetForm(ModelForm):

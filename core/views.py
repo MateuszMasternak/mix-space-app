@@ -356,8 +356,9 @@ def avatar_upload(request):
         form = UserAvatarForm(request.POST, request.FILES)
         if form.is_valid():
             user = User.objects.get(pk=request.user.id)
-            user.avatar.delete()
-            user.avatar = form.cleaned_data['avatar']
+            if user.avatar is not None:
+                user.avatar.delete()
+            user.avatar = request.FILES['avatar']
             user.save()
 
             return redirect(request.META['HTTP_REFERER'])
