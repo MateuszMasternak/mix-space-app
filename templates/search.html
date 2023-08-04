@@ -1,4 +1,4 @@
-{% extends 'core/layout.html' %}
+{% extends 'layout.html' %}
 {% load static %}
 
 {% block title %}- search{% endblock %}
@@ -8,9 +8,9 @@
     {% if empty %}
         <h2 class="text-warning empty-search">Try with other phrase.</h2>
     {% endif %}
-    {% include 'core/include/tracks.html' %}
+    {% include 'include/tracks.html' %}
 
-    {% include 'core/include/pagination.html' %}
+    {% include 'include/pagination.html' %}
     
-    <script src="{% static 'core/js/cards.js' %}"></script>
+    <script src="{% static 'js/cards.js' %}"></script>
 {% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'core/layout.html' %}
+{% extends 'layout.html' %}
 {% load static %}
 {% load widget_tweaks %}
 
@@ -6,7 +6,7 @@
 
 {% block body %}
     <h1 class="h1-pos">Place for your music.</h1>
-    {% include 'core/include/messages.html' %}
+    {% include 'include/messages.html' %}
 
     {% if not user.is_authenticated %}
         <p class="text-warning" id="upload-info">Only logged-in users can upload files.</p>
@@ -36,5 +36,5 @@
             <a class="btn btn-outline-primary submit upload-btn" type="button" id="upload-to-register-btn" href="{% url 'log_in' %}">Upload</a>
         {% endif %}
     </form>
-    <script src="{% static 'core/js/showInfo.js' %}"></script>
+    <script src="{% static 'js/showInfo.js' %}"></script>
 {% endblock %}
