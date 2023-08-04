@@ -18,53 +18,6 @@ from .tokens import account_activation_token
 from .convert_audio import convert_to_mp3
 
 
-def activate(request, uidb64, token):
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except User.DoesNotExist:
-        user = None
-
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-
-        messages.success(request, '<h3 class="email-conf">Email confirmation.'
-                                  '</h3></br><ul class="errorlist"><li>Thank '
-                                  'you for your email confirmation. now you can'
-                                  ' login to your account.</li></ul>')
-    else:
-        messages.error(request, '<h3 class="email-conf">Email confirmation.'
-                                '</h3></br><ul class="errorlist"><li>Activation'
-                                ' link is invalid.</li></ul>')
-
-    return redirect('log_in')
-
-
-def activate_email(request, user, email):
-    mail_subject = 'Activate mix-space\'s user account.'
-    message = render_to_string('messages/activate_mess.html', {
-        'user': user.username,
-        'domain': get_current_site(request).domain,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': account_activation_token.make_token(user),
-        'Protocol': 'https' if request.is_secure() else 'http'
-    })
-    email = EmailMessage(mail_subject, message, to=[email])
-    if email.send():
-        messages.success(request, f'<h3 class="email-conf">Email confirmation.'
-                                  f'</h3></br><ul class="errorlist"><li>Dear <b'
-                                  f'>{user}</b>, please go to your email <b>'
-                                  f'{email}</b> inbox and click on received '
-                                  f'activation link to confirm and complete the'
-                                  f' registration. <b>Note:</b> Check your spam'
-                                  f' folder.</li></ul>')
-    else:
-        messages.error(request, f'<h3 class="email-conf">Email confirmation.'
-                                f'</h3></br><ul class="errorlist"><li>Problem '
-                                f'sending email to {email}, check if you typed'
-                                f' it correctly.</ul>/<li>')
-
 
 def index(request):
     if request.method == 'GET':
@@ -229,17 +182,14 @@ def like(request, pk):
             like_.save()
 
         return JsonResponse(
-            {'success': 'Follows are updated successfully.'},
+            {'success': 'Likes are updated successfully.'},
             status=200
         )
     elif request.method == 'GET':
         try:
             track = Track.objects.get(pk=pk)
         except Track.DoesNotExist:
-            return JsonResponse(
-                {'error': 'Track doesn\'t exist.'},
-                status=404
-            )
+            return render(request, '404.html', status=404)
         likes_count = Like.objects.filter(track=track).count()
 
         try:
@@ -282,11 +232,7 @@ def follow(request, username):
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            return JsonResponse(
-                {'error': 'User doesn\'t exist'},
-                status=404
-            )
-
+            return render(request, '404.html', status=404)
         try:
             follow_ = Follow.objects.get(user=user, follower=request.user)
             follow_.delete()
@@ -302,11 +248,7 @@ def follow(request, username):
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            return JsonResponse(
-                {'error': 'User doesn\'t exist'},
-                status=404
-            )
-
+            return render(request, '404.html', status=404)
         try:
             Follow.objects.get(
                 user=user,
@@ -350,9 +292,7 @@ def player(request, pk):
         try:
             track = Track.objects.get(pk=pk)
         except Track.DoesNotExist:
-            return render(request, 'player.html', {
-                'error': 'Track doesn\'t exist.'
-            })
+            return render(request, '404.html', status=404)
 
         return render(request, 'player.html', {
             'track': track,
@@ -405,22 +345,77 @@ def avatar_upload(request):
         return render(request, '501.html', status=501)
 
 
-
 @login_required(login_url='/log-in')
 def delete(request, pk):
     if request.method == 'POST':
         try:
             track = Track.objects.get(pk=pk)
-            track.delete()
+            if track.artist == request.user:
+                track.delete()
+            else:
+                return render(request, '401.html', status=401)
         except Track.DoesNotExist:
-            return JsonResponse(
-                {'error': 'Track doesn\'t exist'},
-                status=404
-            )
+            return render(request, '405.html', status=404)
 
         return JsonResponse({'success': 'Track is deleted successfully.'},
                             status=200)
     elif request.method == 'GET':
         return render(request, '405.html', status=405)
+    else:
+        return render(request, '501.html', status=501)
+
+def activate(request, uidb64, token):
+    if request.method == 'GET':
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except User.DoesNotExist:
+            user = None
+
+        if user is not None and account_activation_token.check_token(user,
+                                                                     token):
+            user.is_active = True
+            user.save()
+
+            messages.success(request,
+                             '<h3 class="email-conf">Email confirmation.'
+                             '</h3></br><ul class="errorlist"><li>Thank '
+                             'you for your email confirmation. now you can'
+                             ' login to your account.</li></ul>')
+        else:
+            messages.error(request, '<h3 class="email-conf">Email confirmation.'
+                                    '</h3></br><ul class="errorlist"><li>Activation'
+                                    ' link is invalid.</li></ul>')
+
+        return redirect('log_in')
+    else:
+        return render(request, '501.html', status=501)
+
+def activate_email(request, user, email):
+    if request.method == 'GET':
+        mail_subject = 'Activate mix-space\'s user account.'
+        message = render_to_string('messages/activate_mess.html', {
+            'user': user.username,
+            'domain': get_current_site(request).domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
+            'Protocol': 'https' if request.is_secure() else 'http'
+        })
+        email = EmailMessage(mail_subject, message, to=[email])
+        if email.send():
+            messages.success(request,
+                             f'<h3 class="email-conf">Email confirmation.'
+                             f'</h3></br><ul class="errorlist"><li>Dear <b'
+                             f'>{user}</b>, please go to your email <b>'
+                             f'{email}</b> inbox and click on received '
+                             f'activation link to confirm and complete the'
+                             f' registration. <b>Note:</b> Check your spam'
+                             f' folder.</li></ul>')
+        else:
+            messages.error(request,
+                           f'<h3 class="email-conf">Email confirmation.'
+                           f'</h3></br><ul class="errorlist"><li>Problem '
+                           f'sending email to {email}, check if you typed'
+                           f' it correctly.</ul>/<li>')
     else:
         return render(request, '501.html', status=501)
