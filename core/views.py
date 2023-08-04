@@ -43,7 +43,7 @@ def activate(request, uidb64, token):
 
 def activate_email(request, user, email):
     mail_subject = 'Activate mix-space\'s user account.'
-    message = render_to_string('core/messages/activate_mess.html', {
+    message = render_to_string('messages/activate_mess.html', {
         'user': user.username,
         'domain': get_current_site(request).domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -67,14 +67,17 @@ def activate_email(request, user, email):
 
 
 def index(request):
-    all_tracks = Track.objects.all().order_by('-time_added')
-    paginator = Paginator(all_tracks, 12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    if request.method == 'GET':
+        all_tracks = Track.objects.all().order_by('-time_added')
+        paginator = Paginator(all_tracks, 12)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-    return render(request, 'core/index.html', {
-        'page_obj': page_obj
-    })
+        return render(request, 'index.html', {
+            'page_obj': page_obj
+        })
+    else:
+        return render(request, '501.html', status=501)
 
 
 def sign_up(request):
@@ -103,11 +106,13 @@ def sign_up(request):
                 else:
                     messages.error(request, error)
             return redirect('sign_up')
-    else:
+    elif request.method == 'GET':
         form = SignUpForm
-        return render(request, 'core/sign_up.html', {
+        return render(request, 'sign_up.html', {
             'form': form
         })
+    else:
+        return render(request, '501.html', status=501)
 
 
 def log_in(request):
@@ -135,20 +140,25 @@ def log_in(request):
                 else:
                     messages.error(request, error)
             return redirect('log_in')
-    else:
+    elif request.method == 'GET':
         form = LogInForm
-        return render(request, 'core/log_in.html', {
+        return render(request, 'log_in.html', {
             'form': form
         })
+    else:
+        return render(request, '501.html', status=501)
 
 
 @login_required(login_url='/log-in')
 def log_out(request):
-    logout(request)
+    if request.method == 'GET':
+        logout(request)
 
-    messages.success(request, '<ul class="errorlist"><li>Logged out '
-                              'successfully.</li></ul>')
-    return redirect('index')
+        messages.success(request, '<ul class="errorlist"><li>Logged out '
+                                  'successfully.</li></ul>')
+        return redirect('index')
+    else:
+        return render(request, '501.html', status=501)
 
 
 @login_required(login_url='/log-in')
@@ -167,39 +177,44 @@ def upload(request):
             for error in list(form.errors.values()):
                 messages.error(request, error)
             return redirect('upload')
-    else:
+    elif request.method == 'GET':
         form = AddSetForm()
-        return render(request, 'core/upload.html', {
+        return render(request, 'upload.html', {
             'form': form
         })
+    else:
+        return render(request, '501.html', status=501)
 
 
 def show_user(request, username):
-    user = User.objects.get(username=username)
-    if request.user.username == username:
-        logged_in = True
+    if request.method == 'GET':
+        user = User.objects.get(username=username)
+        if request.user.username == username:
+            logged_in = True
+        else:
+            logged_in = False
+
+        user_tracks = Track.objects.filter(artist=user).order_by('-time_added')
+        paginator = Paginator(user_tracks, 12)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        form = UserAvatarForm()
+
+        try:
+            avatar = user.avatar.url
+        except ValueError:
+            avatar = None
+
+        return render(request, 'user_profile.html', {
+            'username': user.username,
+            'avatar': avatar,
+            'logged_in': logged_in,
+            'page_obj': page_obj,
+            'form': form
+        })
     else:
-        logged_in = False
-
-    user_tracks = Track.objects.filter(artist=user).order_by('-time_added')
-    paginator = Paginator(user_tracks, 12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    form = UserAvatarForm()
-
-    try:
-        avatar = user.avatar.url
-    except ValueError:
-        avatar = None
-
-    return render(request, 'core/user_profile.html', {
-        'username': user.username,
-        'avatar': avatar,
-        'logged_in': logged_in,
-        'page_obj': page_obj,
-        'form': form
-    })
+        return render(request, '501.html', status=501)
 
 
 def like(request, pk):
@@ -217,7 +232,7 @@ def like(request, pk):
             {'success': 'Follows are updated successfully.'},
             status=200
         )
-    else:
+    elif request.method == 'GET':
         try:
             track = Track.objects.get(pk=pk)
         except Track.DoesNotExist:
@@ -239,20 +254,26 @@ def like(request, pk):
         }
 
         return JsonResponse(data)
+    else:
+        return render(request, '501.html', status=501)
 
 
 @login_required(login_url='/log-in')
 def liked(request):
-    likes = Like.objects.filter(user=request.user)
-    tracks = Track.objects.filter(id__in=likes.values('track_id'))
+    if request.method == 'GET':
+        likes = Like.objects.filter(user=request.user)
+        tracks = Track.objects.filter(id__in=likes.values('track_id')).order_by(
+            '-time_added')
 
-    paginator = Paginator(tracks, 12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+        paginator = Paginator(tracks, 12)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-    return render(request, 'core/liked.html', {
-        'page_obj': page_obj
-    })
+        return render(request, 'liked.html', {
+            'page_obj': page_obj
+        })
+    else:
+        return render(request, '501.html', status=501)
 
 
 @login_required(login_url='/log-in')
@@ -277,7 +298,7 @@ def follow(request, username):
             {'success': 'Follows are updated successfully.'},
             status=200
         )
-    else:
+    elif request.method == 'GET':
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
@@ -300,36 +321,44 @@ def follow(request, username):
         }
 
         return JsonResponse(data)
+    else:
+        return render(request, '501.html', status=501)
 
 
 @login_required(login_url='/log-in')
 def following(request):
-    follows = Follow.objects.filter(follower=request.user)
-    users = User.objects.filter(id__in=follows.values('user_id'))
-    tracks = Track.objects.filter(
-        artist_id__in=users.values('id')
-    ).order_by('-time_added')
+    if request.method == 'GET':
+        follows = Follow.objects.filter(follower=request.user)
+        users = User.objects.filter(id__in=follows.values('user_id'))
+        tracks = Track.objects.filter(
+            artist_id__in=users.values('id')
+        ).order_by('-time_added')
 
-    paginator = Paginator(tracks, 12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+        paginator = Paginator(tracks, 12)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-    return render(request, 'core/following.html', {
-        'page_obj': page_obj
-    })
+        return render(request, 'following.html', {
+            'page_obj': page_obj
+        })
+    else:
+        return render(request, '501.html', status=501)
 
 
 def player(request, pk):
-    try:
-        track = Track.objects.get(pk=pk)
-    except Track.DoesNotExist:
-        return render(request, 'core/player.html', {
-            'error': 'Track doesn\'t exist.'
-        })
+    if request.method == 'GET':
+        try:
+            track = Track.objects.get(pk=pk)
+        except Track.DoesNotExist:
+            return render(request, 'player.html', {
+                'error': 'Track doesn\'t exist.'
+            })
 
-    return render(request, 'core/player.html', {
-        'track': track,
-    })
+        return render(request, 'player.html', {
+            'track': track,
+        })
+    else:
+        return render(request, '501.html', status=501)
 
 
 def search(request):
@@ -344,10 +373,14 @@ def search(request):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
-        return render(request, 'core/search.html', {
+        return render(request, 'search.html', {
             'page_obj': page_obj,
             'empty': empty
         })
+    elif request.method == 'GET':
+        return render(request, '405.html', status=405)
+    else:
+        return render(request, '501.html', status=501)
 
 
 @login_required(login_url='/log-in')
@@ -366,6 +399,11 @@ def avatar_upload(request):
             for error in list(form.errors.values()):
                 messages.error(request, error)
             return redirect(request.META['HTTP_REFERER'])
+    elif request.method == 'GET':
+        return render(request, '405.html', status=405)
+    else:
+        return render(request, '501.html', status=501)
+
 
 
 @login_required(login_url='/log-in')
@@ -382,3 +420,7 @@ def delete(request, pk):
 
         return JsonResponse({'success': 'Track is deleted successfully.'},
                             status=200)
+    elif request.method == 'GET':
+        return render(request, '405.html', status=405)
+    else:
+        return render(request, '501.html', status=501)
