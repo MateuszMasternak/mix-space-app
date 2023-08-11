@@ -54,8 +54,12 @@ def test_log_in_view(client, sample_user):
     assert response.status_code == 501
 
 def test_player_view(client, sample_track_sample_user):
-    url = reverse('player', kwargs={'pk': 1})
+    url = reverse('player', kwargs={'pk': sample_track_sample_user.id})
     assert_status_codes(client, url, get=200)
+
+    url = reverse('player', kwargs={'pk': 12345})
+    response = client.get(url)
+    assert response.status_code == 404
 
 def test_log_out_view(client):
     url = reverse('log_out')
