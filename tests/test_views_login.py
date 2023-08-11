@@ -79,19 +79,19 @@ def test_delete_view_author_logged_in(client, sample_user,
                                       sample_track_sample_user):
     print(sample_track_sample_user.id)
     client.force_login(sample_user)
-    url = reverse('delete', kwargs={'pk': 2})
+    url = reverse('delete', kwargs={'pk': 3})
     simple_assert(client, url, get=405, post=200)
 
 def test_delete_view_other_user_logged_in(client, sample_user,
                                           sample_track_second_sample_user):
     print(sample_track_second_sample_user.id)
     client.force_login(sample_user)
-    url = reverse('delete', kwargs={'pk': 3})
+    url = reverse('delete', kwargs={'pk': 4})
     simple_assert(client, url, get=405, post=401)
 
 def test_delete_view_not_existing_track(client, sample_user):
     client.force_login(sample_user)
-    url = reverse('delete', kwargs={'pk': 1})
+    url = reverse('delete', kwargs={'pk': 1111})
     simple_assert(client, url, get=405, post=404)
 
 def test_log_out_view(client, sample_user):
