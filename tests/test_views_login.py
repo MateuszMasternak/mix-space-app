@@ -2,20 +2,36 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
 from simple_assert_status_codes import assert_status_codes as simple_assert
-from fixtures import sample_user, second_sample_user
-from fixtures import sample_track_sample_user, sample_track_second_sample_user
+from fixtures import sample_user, sample_track_sample_user
+from fixtures import second_sample_user, sample_track_second_sample_user
 
-# def test_upload_view(client, sample_user):
-#     client.force_login(sample_user)
-#     url = reverse('upload')
-#
-#     response = client.get(url)
-#     assert response.status_code == 200
-#
-#     file = SimpleUploadedFile('file.wav', b'file_content',
-#                               content_type='audio/wav')
-#     response = client.post(url, {'csrftoken': client.cookies['csrftoken'].value, 'file': file}, format='multipart')
-#     assert response.status_code == 200
+def test_upload_view(client, sample_user):
+    client.force_login(sample_user)
+    url = reverse('upload')
+
+    response = client.get(url)
+    assert response.status_code == 200
+
+    # Correct file format
+    file = SimpleUploadedFile('file.wav', b'file_content',
+                              content_type='audio/wav')
+    response = client.post(url, {'file': file}, format='multipart')
+    assert response.status_code == 302
+
+    # Wrong file format
+    file = SimpleUploadedFile('file.wav', b'file_content',
+                              content_type='audio/mp3')
+    response = client.post(url, {'file': file}, format='multipart')
+    assert response.status_code == 302
+
+    response = client.put(url)
+    assert response.status_code == 501
+
+    response = client.patch(url)
+    assert response.status_code == 501
+
+    response = client.delete(url)
+    assert response.status_code == 501
 
 def test_liked_view(client, sample_user):
     client.force_login(sample_user)
@@ -37,10 +53,26 @@ def test_following_view(client, sample_user):
     url = reverse('following')
     simple_assert(client, url, get=200)
 
-# def test_avatar_upload_view(client, sample_user):
-#     client.force_login(sample_user)
-#     url = reverse('avatar_upload')
-#     assert_status_codes(client, url, get=405, post=200)
+def test_avatar_upload_view(client, sample_user):
+    client.force_login(sample_user)
+    url = reverse('avatar_upload')
+
+    response = client.get(url)
+    assert response.status_code == 405
+
+    response = client.post(url)
+    assert response.status_code == 501
+
+    file = SimpleUploadedFile('file.png', b'file_content',
+                              content_type='image/png')
+    response = client.put(url, {'avatar': file}, format='multipart')
+    assert response.status_code == 302
+
+    response = client.patch(url)
+    assert response.status_code == 501
+
+    response = client.delete(url)
+    assert response.status_code == 501
 
 def test_delete_view_author_logged_in(client, sample_user,
                                       sample_track_sample_user):

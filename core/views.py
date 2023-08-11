@@ -334,11 +334,11 @@ def avatar_upload(request):
             user.avatar = request.FILES['avatar']
             user.save()
 
-            return redirect(request.META['HTTP_REFERER'])
+            return redirect(request.META.get('HTTP_REFERER', 'index'))
         else:
             for error in list(form.errors.values()):
                 messages.error(request, error)
-            return redirect(request.META['HTTP_REFERER'])
+            return redirect(request.META.get('HTTP_REFERER', 'index'))
     elif request.method == 'GET':
         return render(request, '405.html', status=405)
     else:
@@ -363,6 +363,7 @@ def delete(request, pk):
         return render(request, '405.html', status=405)
     else:
         return render(request, '501.html', status=501)
+
 
 def activate(request, uidb64, token):
     if request.method == 'GET':
@@ -390,6 +391,7 @@ def activate(request, uidb64, token):
         return redirect('log_in')
     else:
         return render(request, '501.html', status=501)
+
 
 def activate_email(request, user, email):
     if request.method == 'GET':
