@@ -1,3 +1,4 @@
+import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
@@ -60,13 +61,13 @@ def test_avatar_upload_view(client, sample_user):
     response = client.get(url)
     assert response.status_code == 405
 
-    response = client.post(url)
-    assert response.status_code == 501
-
     file = SimpleUploadedFile('file.png', b'file_content',
                               content_type='image/png')
-    response = client.put(url, {'avatar': file}, format='multipart')
+    response = client.post(url, {'avatar': file}, format='multipart')
     assert response.status_code == 302
+
+    response = client.put(url)
+    assert response.status_code == 501
 
     response = client.patch(url)
     assert response.status_code == 501
@@ -76,14 +77,16 @@ def test_avatar_upload_view(client, sample_user):
 
 def test_delete_view_author_logged_in(client, sample_user,
                                       sample_track_sample_user):
+    print(sample_track_sample_user.id)
     client.force_login(sample_user)
-    url = reverse('delete', kwargs={'pk': 1})
+    url = reverse('delete', kwargs={'pk': 2})
     simple_assert(client, url, get=405, post=200)
 
 def test_delete_view_other_user_logged_in(client, sample_user,
                                           sample_track_second_sample_user):
+    print(sample_track_second_sample_user.id)
     client.force_login(sample_user)
-    url = reverse('delete', kwargs={'pk': 2})
+    url = reverse('delete', kwargs={'pk': 3})
     simple_assert(client, url, get=405, post=401)
 
 def test_delete_view_not_existing_track(client, sample_user):
