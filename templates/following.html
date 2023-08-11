@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}- following{% endblock %}
+
+{% block body %}
+    <h1 class="h1-pos">Tracks of artist you are following.</h1>
+    {% include 'include/tracks.html' %}
+
+    {% include 'include/pagination.html' %}
+    
+    <script src="{% static 'js/cards.js' %}"></script>
+{% endblock %}

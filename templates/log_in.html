@@ -1,4 +1,4 @@
-{% extends 'core/layout.html' %}
+{% extends 'layout.html' %}
 {% load static %}
 {% load widget_tweaks %}
 
@@ -6,7 +6,7 @@
 
 {% block body %}
     <h1 class="h1-pos">Log in.</h1>
-    {% include 'core/include/messages.html' %}
+    {% include 'include/messages.html' %}
 
     <p class="text-warning" id="upload-info"></p>
     <form method="post" action="{% url 'log_in' %}" class="d-flex align-items-center flex-column p-4" id="log-in-form">

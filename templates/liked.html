@@ -1,11 +1,11 @@
-{% extends 'core/layout.html' %}
+{% extends 'layout.html' %}
 {% load static %}
 
 {% block title %}- liked{% endblock %}
 
 {% block body %}
     <h1 class="h1-pos">Tracks you liked.</h1>
-    {% include 'core/include/tracks.html' %}
+    {% include 'include/tracks.html' %}
 
-    {% include 'core/include/pagination.html' %}
+    {% include 'include/pagination.html' %}
 {% endblock %}
